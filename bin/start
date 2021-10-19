@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+yarn --cwd ./events/ start:dev \
+& yarn --cwd ./tickets/ start:dev \
+& yarn --cwd ./payments/ start:dev
