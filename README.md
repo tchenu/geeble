@@ -6,8 +6,10 @@
 
 ## Stack
 
+- 📦 API Platform
 - 📦 Nuxt 3
 - 📦 NestJS
+- 🔎 Meilisearch
 - 💿 Postgresql
 - 💭 MQTT
 - ☁️ Heroku
