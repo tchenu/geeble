@@ -4,6 +4,15 @@
 
 [Open PR master -> preproduction](https://github.com/tchenu/geeble/compare/preproduction...master?expand=1)
 
+## Stack
+
+- 📦 Nuxt 3
+- 📦 NestJS
+- 💿 Postgresql
+- 💭 MQTT
+- ☁️ Heroku
+- ☁️ Vercel
+
 ## Setup
 
 @TODO
