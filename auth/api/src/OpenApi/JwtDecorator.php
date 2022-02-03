@@ -12,7 +12,8 @@ final class JwtDecorator implements OpenApiFactoryInterface
 {
     public function __construct(
         private OpenApiFactoryInterface $decorated
-    ) {}
+    ) {
+    }
 
     public function __invoke(array $context = []): OpenApi
     {
@@ -33,7 +34,7 @@ final class JwtDecorator implements OpenApiFactoryInterface
             'properties' => [
                 'email' => [
                     'type' => 'string',
-                    'example' => 'test@test2.fr',
+                    'example' => 'test@test.fr',
                 ],
                 'password' => [
                     'type' => 'string',
