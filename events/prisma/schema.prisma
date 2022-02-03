@@ -7,3 +7,30 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  name        String
+  location    String
+  organizer   String
+  date        DateTime
+  description String
+  price       Float
+  seats       Int
+  user        Int
+  published   Boolean  @default(false)
+  Slot        Slot[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+}
+
+model Slot {
+  id          Int      @id @default(autoincrement())
+  transaction String?
+  quantity    Int
+  event       Event    @relation(fields: [eventId], references: [id])
+  eventId     Int
+  user        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+}
