@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, Request } from '@nestjs/common';
 import { SlotService } from './slot.service';
 import { CreateSlotDto } from './dto/create-slot.dto';
 import { UpdateSlotDto } from './dto/update-slot.dto';
 import { ValidationPipe } from 'src/validation.pipe';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('slot')
 export class SlotController {
@@ -13,8 +14,10 @@ export class SlotController {
     return this.slotService.create(createEventDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll() {
+  async findAll(@Request() req) {
+    console.log(req.user)
     return this.slotService.findAll({});
   }
 

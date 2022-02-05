@@ -27,8 +27,4 @@ export class UpdateEventDto extends PartialType(CreateEventDto) {
     @Type(() => Number)
     @IsInt()
     seats: number;
-
-    @Type(() => Number)
-    @IsInt()
-    user: number;
 }

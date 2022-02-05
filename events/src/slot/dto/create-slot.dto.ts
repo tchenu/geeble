@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsInt } from 'class-validator';
+import { IsNotEmpty, IsInt, IsEmail } from 'class-validator';
 
 export class CreateSlotDto {
     @IsNotEmpty()
@@ -15,5 +15,5 @@ export class CreateSlotDto {
     @IsNotEmpty()
     @Type(() => Number)
     @IsInt()
-    user: number;
+    userId: number;
 }
