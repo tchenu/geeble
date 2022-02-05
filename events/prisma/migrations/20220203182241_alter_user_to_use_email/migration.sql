@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Event" ALTER COLUMN "user" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "Slot" ALTER COLUMN "user" SET DATA TYPE TEXT;

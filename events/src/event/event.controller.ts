@@ -26,7 +26,7 @@ export class EventController {
   @Get('/user/:id')
   async findByUser(@Param('id') id: string) {
     return this.eventService.findAll({
-      where: { user : Number(id) }
+      where: { userId : Number(id) }
     });
   }
 

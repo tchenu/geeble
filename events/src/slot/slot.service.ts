@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { CreateSlotDto } from './dto/create-slot.dto';
 import {
   Slot,
-  Prisma
+  Prisma,
 } from '@prisma/client';
 
 
@@ -15,7 +15,7 @@ export class SlotService {
     return this.prisma.slot.create({
       data: {
         quantity: createSlotDto.quantity,
-        user: createSlotDto.quantity,
+        userId: createSlotDto.userId,
         event: { 
           connect: { id: createSlotDto.eventId }
         }
@@ -52,8 +52,8 @@ export class SlotService {
   }): Promise<Slot> {
     const { where, data } = params;
     return this.prisma.slot.update({
-      data,
       where,
+      data
     });
   }
 

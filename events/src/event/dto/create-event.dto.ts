@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsString, IsInt, IsDate, IsNumber, IsNotEmpty, IsNumberString } from 'class-validator';
+import { IsString, IsInt, IsDate, IsNumber, IsNotEmpty, IsNumberString, IsEmail } from 'class-validator';
 
 export class CreateEventDto {
     @IsNotEmpty()
@@ -36,5 +36,5 @@ export class CreateEventDto {
     @IsNotEmpty()
     @Type(() => Number)
     @IsInt()
-    user: number;
+    userId: number;
 }

@@ -17,7 +17,7 @@ model Event {
   description String
   price       Float
   seats       Int
-  user        Int
+  userId      Int
   published   Boolean  @default(false)
   Slot        Slot[]
   createdAt   DateTime @default(now())
@@ -25,12 +25,19 @@ model Event {
 }
 
 model Slot {
-  id          Int      @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   transaction String?
   quantity    Int
-  event       Event    @relation(fields: [eventId], references: [id])
+  event       Event      @relation(fields: [eventId], references: [id])
   eventId     Int
-  user        Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
+  userId      Int
+  status      SlotStatus @default(PENDING)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @default(now()) @updatedAt
+}
+
+enum SlotStatus {
+  PENDING
+  CANCELED
+  COMPLETED
 }
