@@ -11,11 +11,11 @@ import {
 export class SlotService {
   constructor(private prisma: PrismaService) {}
   
-  async create(createSlotDto: CreateSlotDto) {
+  async create(createSlotDto: CreateSlotDto, userId: string) {
     return this.prisma.slot.create({
       data: {
         quantity: createSlotDto.quantity,
-        userId: createSlotDto.userId,
+        userId: userId,
         event: { 
           connect: { id: createSlotDto.eventId }
         }
@@ -40,9 +40,34 @@ export class SlotService {
     });
   }
 
+  async findAllWithEvent(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.SlotWhereUniqueInput;
+    where?: Prisma.SlotWhereInput;
+    orderBy?: Prisma.EventOrderByWithRelationInput;
+  }): Promise<Slot[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.slot.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+      include: {event: true}
+    });
+  }
+
   async findOne(slotWhereUniqueInput: Prisma.SlotWhereUniqueInput) {
     return this.prisma.slot.findUnique({
       where: slotWhereUniqueInput,
+    });
+  }
+
+  async findOneWithEvent(slotWhereUniqueInput: Prisma.SlotWhereUniqueInput) {
+    return this.prisma.slot.findUnique({
+      where: slotWhereUniqueInput,
+      include: { event: true }
     });
   }
 

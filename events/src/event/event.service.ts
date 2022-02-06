@@ -3,17 +3,30 @@ import { PrismaService } from '../prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import {
   Event,
-  Prisma
+  Prisma,
+  Slot,
+  SlotStatus
 } from '@prisma/client';
-
+import slugify from 'slugify';
 
 @Injectable()
 export class EventService {
   constructor(private prisma: PrismaService) {}
   
-  async create(createEventDto: CreateEventDto) {
+  async create(createEventDto: CreateEventDto, userId: string, companyId: string) {
+    const slug = slugify(`${createEventDto.name} ${createEventDto.organizer}`, {lower: true, strict: true});
+
+    if(await this.findOne({slug: slug})) {
+      throw new HttpException("slug must be unique", HttpStatus.BAD_REQUEST);
+    }
+
     return this.prisma.event.create({
-      data: createEventDto,
+      data: {
+        ...createEventDto,
+        slug: slug,
+        userId: userId,
+        companyId: companyId
+      },
     });
   }
 
@@ -40,23 +53,38 @@ export class EventService {
     });
   }
 
-  async update(params: {
-    where: Prisma.EventWhereUniqueInput;
-    data: Prisma.EventWhereInput;
-  }): Promise<Event> {
-    const { where, data } = params;
-    return this.prisma.event.update({
-      data,
-      where,
+  async findOneWithSlots(eventWhereUniqueInput: Prisma.EventWhereUniqueInput) {
+    return this.prisma.event.findUnique({
+      where: eventWhereUniqueInput,
+      include: {slots: true},
     });
   }
 
-  async remove(where: Prisma.EventWhereUniqueInput) {
-    if(! await this.findOne(where)) {
-      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
-    }
+  async findOneAvailable(eventWhereUniqueInput: Prisma.EventWhereUniqueInput) {
 
-    await this.prisma.event.delete({
+    return this.prisma.event.findUnique({
+      where: {
+        slug: eventWhereUniqueInput.slug,
+      },
+      include: {
+        slots: {
+          where: {
+            status: { not: SlotStatus.CANCELED }
+          }
+        }
+      },
+    });
+  }
+
+  async update(params: {
+    where: Prisma.EventWhereUniqueInput;
+    data: Prisma.EventWhereInput;
+    companyId: string;
+  }): Promise<Event> {
+    const { where, data, companyId } = params;
+        
+    return this.prisma.event.update({
+      data,
       where,
     });
   }
