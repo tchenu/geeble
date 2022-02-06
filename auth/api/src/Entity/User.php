@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ApiResource()]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -14,8 +16,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: "uuid", unique: true)]
+    #[ORM\GeneratedValue(strategy: "CUSTOM")]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
@@ -29,9 +32,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private $plainPassword;
 
-    public function getId(): ?int
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'users')]
+    private $company;
+
+    public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function setId(Uuid $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -105,7 +118,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPlainPassword(string $plainPassword): string
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
@@ -128,5 +141,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
+
+        if ($this->company->getUsers()->count(1) && $this->company->getUsers()->contains($this)) {
+            $this->setRoles(
+                array_merge($this->getRoles(), ['ROLE_LEADER'])
+            );
+        }
+
+        return $this;
     }
 }
