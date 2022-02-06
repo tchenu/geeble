@@ -1,54 +1,121 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, Request, Query, Response } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { ValidationPipe } from 'src/validation.pipe';
-
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { EventStatus } from '@prisma/client';
+import { QueryEventDto } from './dto/query-event.dto';
+import { Roles } from 'src/user/roles.enum';
+import { gateOwn, gateExists, gateRoles, gateRolesAndOwn } from './event.gate';
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
+  /* JwtAuthGuard routes */
+
+  @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body(new ValidationPipe()) createEventDto: CreateEventDto) {
-    return this.eventService.create(createEventDto);
+  async create(@Request() req, @Body(new ValidationPipe()) createEventDto: CreateEventDto) {
+    gateOwn(req.user)
+    gateRoles([Roles.ROLE_LEADER, Roles.ROLE_EDITOR], req.user)
+
+    return this.eventService.create(createEventDto, req.user.id, req.user.companyId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/company')
+  async findByCompany(@Request() req) {
+    gateOwn(req.user)
+    
+    return this.eventService.findAll({
+      where: { companyId : req.user.companyId }
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':slug')
+  async update(@Request() req, @Param('slug') slug: string, @Body(new ValidationPipe()) updateEventDto: UpdateEventDto) {
+    const event = await this.eventService.findOne({ slug: slug });
+
+    gateRolesAndOwn(event, [Roles.ROLE_LEADER, Roles.ROLE_EDITOR], req.user);
+
+    return this.eventService.update({
+      where: { slug: slug },
+      data: updateEventDto,
+      companyId: req.user.companyId,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put(':slug/publish')
+  async publish(@Request() req, @Param('slug') slug: string) {
+    const event = await this.eventService.findOne({ slug: slug });
+
+    gateRolesAndOwn(event, [Roles.ROLE_LEADER, Roles.ROLE_PUBLISHER], req.user);
+
+    await this.eventService.update({
+      where: { slug: slug },
+      data: { status: EventStatus.PUBLISHED },
+      companyId: req.user.companyId,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put(':slug/unpublish')
+  async unpublish(@Request() req, @Param('slug') slug: string) {
+    const event = await this.eventService.findOne({ slug: slug });
+
+    gateRolesAndOwn(event, [Roles.ROLE_LEADER, Roles.ROLE_PUBLISHER], req.user);
+
+    await this.eventService.update({
+      where: { slug: slug },
+      data: { status: EventStatus.CANCELED },
+      companyId: req.user.companyId,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':slug/slots')
+  async findSlots(@Request() req, @Param('slug') slug: string) {
+    const event = await this.eventService.findOneWithSlots({ slug: slug })
+
+    gateRolesAndOwn(event, [Roles.ROLE_LEADER], req.user);
+
+    return event.slots
+  }
+
+  /* Public routes */
 
   @Get()
-  async findAll() {
-    return this.eventService.findAll({});
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.eventService.findOne({ id: Number(id) });
-  }
-
-  @Get('/user/:id')
-  async findByUser(@Param('id') id: string) {
+  async findAll(@Query() query: QueryEventDto) {
     return this.eventService.findAll({
-      where: { userId : Number(id) }
+      skip: query.skip,
+      take: query.take
     });
   }
 
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body(new ValidationPipe()) updateEventDto: UpdateEventDto) {
-    return this.eventService.update({
-      where: { id: Number(id) },
-      data: updateEventDto
-    });
+  @Get(':slug')
+  async findOne(@Param('slug') slug: string) {
+    const event = await this.eventService.findOne({ slug: slug })
+
+    gateExists(event)
+
+    return event
   }
 
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
-    return this.eventService.remove({ id: Number(id) });
-  }
+  @Get(':slug/available')
+  async findSlotsAvailable(@Response() res, @Param('slug') slug: string) {
+    const event = await this.eventService.findOneAvailable({ slug: slug })
 
-  @Put('/publish/:id')
-  async publish(@Param('id') id: string) {
-    return this.eventService.update({
-      where: { id: Number(id) },
-      data: { published: true }, 
+    gateExists(event)
+
+    const reserved = event.slots.reduce((quantity, slot) => quantity + slot.quantity, 0);
+
+    return res.json({
+      'seats': event.seats,
+      'reserved': reserved,
+      'availables': event.seats - reserved
     });
   }
 }

@@ -9,28 +9,30 @@ generator client {
 }
 
 model Event {
-  id          Int      @id @default(autoincrement())
+  id          String      @id @default(uuid())
   name        String
+  slug        String      @unique
   location    String
   organizer   String
   date        DateTime
   description String
   price       Float
   seats       Int
-  userId      Int
-  published   Boolean  @default(false)
-  Slot        Slot[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
+  userId      String
+  companyId   String
+  status      EventStatus @default(REWIEW)
+  slots       Slot[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now()) @updatedAt
 }
 
 model Slot {
-  id          Int        @id @default(autoincrement())
+  id          String     @id @default(uuid())
   transaction String?
   quantity    Int
   event       Event      @relation(fields: [eventId], references: [id])
-  eventId     Int
-  userId      Int
+  eventId     String
+  userId      String
   status      SlotStatus @default(PENDING)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @default(now()) @updatedAt
@@ -40,4 +42,11 @@ enum SlotStatus {
   PENDING
   CANCELED
   COMPLETED
+  REFOUND
+}
+
+enum EventStatus {
+  REWIEW
+  CANCELED
+  PUBLISHED
 }

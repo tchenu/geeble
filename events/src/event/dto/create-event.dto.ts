@@ -32,9 +32,4 @@ export class CreateEventDto {
     @Type(() => Number)
     @IsInt()
     seats: number;
-
-    @IsNotEmpty()
-    @Type(() => Number)
-    @IsInt()
-    userId: number;
 }
