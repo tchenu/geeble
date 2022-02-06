@@ -1,0 +1,1551 @@
+{
+	"info": {
+		"_postman_id": "45eb2d41-673b-4f8e-a785-34c37f2346dd",
+		"name": "Events API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Event",
+			"item": [
+				{
+					"name": "JWT",
+					"item": [
+						{
+							"name": "Add event",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: 'https://localhost/authentication_token',",
+											"    method: 'POST',",
+											"    header: {",
+											"        'content-type': 'application/json'",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"email\": \"valentine@test.fr\",",
+											"            \"password\": \"testtest\",",
+											"        }),",
+											"    },",
+											"}, (err, res) => pm.environment.set(\"TOKEN\", res.json().token));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Duplex",
+											"type": "text"
+										},
+										{
+											"key": "location",
+											"value": "Paris",
+											"type": "text"
+										},
+										{
+											"key": "organizer",
+											"value": "Jesus",
+											"type": "text"
+										},
+										{
+											"key": "date",
+											"value": "2022-03-12",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "gregregregregregregregre",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "40",
+											"type": "text"
+										},
+										{
+											"key": "seats",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "userId",
+											"value": "1",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "companyId",
+											"value": "1",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/event",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"event"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Add event",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "Flashmod #1",
+													"type": "text"
+												},
+												{
+													"key": "location",
+													"value": "Paris",
+													"type": "text"
+												},
+												{
+													"key": "organizer",
+													"value": "La Phoenix Team / Family",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2022-03-12",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "La Phoenix Team / Family vous propose son nouveau concept de soirées qui vous ramèneront dans le passé.",
+													"type": "text"
+												},
+												{
+													"key": "price",
+													"value": "40",
+													"type": "text"
+												},
+												{
+													"key": "seats",
+													"value": "100",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost:3000/event",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"event"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "542"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"21e-98CDo0/O9/Hlpvz2JCE/j88W+aE\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 15:39:57 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"0d839d15-f595-454c-8f47-d885de783e4f\",\n    \"name\": \"Flashmod #1\",\n    \"slug\": \"flashmod-1-la-phoenix-team-family\",\n    \"location\": \"Paris\",\n    \"organizer\": \"La Phoenix Team / Family\",\n    \"date\": \"2022-03-12T00:00:00.000Z\",\n    \"description\": \"La Phoenix Team / Family vous propose son nouveau concept de soirées qui vous ramèneront dans le passé.\",\n    \"price\": 40,\n    \"seats\": 100,\n    \"userId\": \"5cd072d2-96e0-494c-b262-9f56b0f931a1\",\n    \"companyId\": \"a42ac85b-220f-4fc4-b3b6-ded00b58f9aa\",\n    \"status\": \"REWIEW\",\n    \"createdAt\": \"2022-02-06T15:39:57.852Z\",\n    \"updatedAt\": \"2022-02-06T15:39:57.852Z\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Get all events by company",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: 'https://localhost/authentication_token',",
+											"    method: 'POST',",
+											"    header: {",
+											"        'content-type': 'application/json'",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"email\": \"julien@test.fr\",",
+											"            \"password\": \"testtest\",",
+											"        }),",
+											"    },",
+											"}, (err, res) => pm.collectionVariables.set(\"TOKEN\", res.json().token));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ TOKEN }}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/event/company",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"event",
+										"company"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Get all events by company",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/event/company",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"event",
+												"company"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "1055"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"41f-KP8Tufrpu2ADGv9hh3UMl48NKIo\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 14:05:08 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": \"c61c2b57-2497-459d-9731-2d6d4a8af50d\",\n        \"name\": \"Flashback #3\",\n        \"slug\": \"flashback-3\",\n        \"location\": \"Paris\",\n        \"organizer\": \"La Phoenix Team / Family\",\n        \"date\": \"2022-02-08T23:00:00.000Z\",\n        \"description\": \"La Phoenix Team / Family vous propose son nouveau concept de soirées qui vous ramèneront dans le passé.\",\n        \"price\": 5.99,\n        \"seats\": 250,\n        \"userId\": \"18f99ff0-f024-4569-b39b-7ade0277ce88\",\n        \"companyId\": \"a42ac85b-220f-4fc4-b3b6-ded00b58f9aa\",\n        \"status\": \"PUBLISHED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"name\": \"Flashback #2\",\n        \"slug\": \"flashback-2\",\n        \"location\": \"Paris\",\n        \"organizer\": \"La Phoenix Team / Family\",\n        \"date\": \"2022-02-07T23:00:00.000Z\",\n        \"description\": \"La Phoenix Team / Family vous propose son nouveau concept de soirées qui vous ramèneront dans le passé.\",\n        \"price\": 5.99,\n        \"seats\": 250,\n        \"userId\": \"18f99ff0-f024-4569-b39b-7ade0277ce88\",\n        \"companyId\": \"a42ac85b-220f-4fc4-b3b6-ded00b58f9aa\",\n        \"status\": \"PUBLISHED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Get slots of specific event",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/event/duplex-jesus/slots",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"event",
+										"duplex-jesus",
+										"slots"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Get slots of specific event",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/event/flashback-2/slots",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"event",
+												"flashback-2",
+												"slots"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "1376"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"560-dt7KnGkGIigfHD17ZlYJV56HCh8\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 14:16:49 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": \"cfa3fd62-1e8d-4fb0-bf1a-1dc405c5fb28\",\n        \"transaction\": \"\",\n        \"quantity\": 10,\n        \"eventId\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"userId\": \"6a0c4510-ae4d-423d-a689-a840fa678283\",\n        \"status\": \"CANCELED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"6c2b4d1f-9d77-4b80-b851-2605bb0313f9\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 2,\n        \"eventId\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"userId\": \"2dd01a48-01ba-4e14-a036-1731381bfa5e\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"20852168-98a5-4672-9528-fb55277da10f\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 8,\n        \"eventId\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"userId\": \"234d3af8-d29d-4942-89d7-b2b5a5a9fa1b\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"262caa21-13b7-4787-8b21-f5454393d3c3\",\n        \"transaction\": \"\",\n        \"quantity\": 7,\n        \"eventId\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"userId\": \"ce863755-b387-4aab-9d53-1c91c301c365\",\n        \"status\": \"CANCELED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"a047ad5b-2da3-44b8-85aa-5da2699aca49\",\n        \"transaction\": \"\",\n        \"quantity\": 1,\n        \"eventId\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"userId\": \"7dc01842-5e33-410e-8afd-8bb441647c78\",\n        \"status\": \"PENDING\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Publish",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: 'https://localhost/authentication_token',",
+											"    method: 'POST',",
+											"    header: {",
+											"        'content-type': 'application/json'",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"email\": \"samuel@test.fr\",",
+											"            \"password\": \"testtest\",",
+											"        }),",
+											"    },",
+											"}, (err, res) => pm.environment.set(\"TOKEN\", res.json().token));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "http://localhost:3000/event/publish/11",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"event",
+										"publish",
+										"11"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Publish",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "http://localhost:3000/event/flashback-2/publish/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"event",
+												"flashback-2",
+												"publish",
+												""
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 15:34:20 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Content-Length",
+											"value": "0"
+										}
+									],
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "Unpublish",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: 'https://localhost/authentication_token',",
+											"    method: 'POST',",
+											"    header: {",
+											"        'content-type': 'application/json'",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"email\": \"valentine@test.fr\",",
+											"            \"password\": \"testtest\",",
+											"        }),",
+											"    },",
+											"}, (err, res) => pm.environment.set(\"TOKEN\", res.json().token));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "http://localhost:3000/event/flashback-2/unpublish",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"event",
+										"flashback-2",
+										"unpublish"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Remove",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "http://localhost:3000/event/flashback-2/unpublish",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"event",
+												"flashback-2",
+												"unpublish"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 15:33:34 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Content-Length",
+											"value": "0"
+										}
+									],
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "Update",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: 'https://localhost/authentication_token',",
+											"    method: 'POST',",
+											"    header: {",
+											"        'content-type': 'application/json'",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"email\": \"valentine@test.fr\",",
+											"            \"password\": \"testtest\",",
+											"        }),",
+											"    },",
+											"}, (err, res) => pm.environment.set(\"TOKEN\", res.json().token));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Flashback #2 - 3",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/event/flashback-2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"event",
+										"flashback-2"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Update",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "Flashback #2",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost:3000/event/flashback-2",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"event",
+												"flashback-2"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "526"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"20e-gufCr6GHNmOCGw+8SlVQuouBj3g\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 15:43:30 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n    \"name\": \"Flashback #2\",\n    \"slug\": \"flashback-2\",\n    \"location\": \"Paris\",\n    \"organizer\": \"La Phoenix Team / Family\",\n    \"date\": \"2022-02-07T23:00:00.000Z\",\n    \"description\": \"La Phoenix Team / Family vous propose son nouveau concept de soirées qui vous ramèneront dans le passé.\",\n    \"price\": 5.99,\n    \"seats\": 250,\n    \"userId\": \"18f99ff0-f024-4569-b39b-7ade0277ce88\",\n    \"companyId\": \"a42ac85b-220f-4fc4-b3b6-ded00b58f9aa\",\n    \"status\": \"PUBLISHED\",\n    \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n    \"updatedAt\": \"2022-02-06T15:43:30.111Z\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get all events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/event",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"event"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get all events",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/event",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"event"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2904"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"b58-aySKVCtokHjG6Ib9ZuLd2X5vjVQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 06 Feb 2022 15:43:44 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"c259b1f0-defe-40d3-aa5f-ab6b60431c5a\",\n        \"name\": \"Duplex\",\n        \"slug\": \"Duplex-Jesus\",\n        \"location\": \"Paris\",\n        \"organizer\": \"Jesus\",\n        \"date\": \"2022-03-12T00:00:00.000Z\",\n        \"description\": \"gregregregregregregregre\",\n        \"price\": 40,\n        \"seats\": 100,\n        \"userId\": \"16b24aae-86a6-11ec-a8a3-0242ac120002\",\n        \"companyId\": \"1ec86ab4-093d-6be4-9362-799145441533\",\n        \"status\": \"REWIEW\",\n        \"createdAt\": \"2022-02-05T21:48:20.203Z\",\n        \"updatedAt\": \"2022-02-05T21:48:20.202Z\"\n    },\n    {\n        \"id\": \"bca8aec8-b85f-44ea-8c93-0bd5b78d3f26\",\n        \"name\": \"Duplex\",\n        \"slug\": \"duplex-jesus\",\n        \"location\": \"Paris\",\n        \"organizer\": \"Jesus\",\n        \"date\": \"2022-03-12T00:00:00.000Z\",\n        \"description\": \"gregregregregregregregre\",\n        \"price\": 40,\n        \"seats\": 100,\n        \"userId\": \"16b24aae-86a6-11ec-a8a3-0242ac120002\",\n        \"companyId\": \"1ec86ab4-093d-6be4-9362-799145441533\",\n        \"status\": \"REWIEW\",\n        \"createdAt\": \"2022-02-05T21:51:13.866Z\",\n        \"updatedAt\": \"2022-02-05T21:51:13.866Z\"\n    },\n    {\n        \"id\": \"c61c2b57-2497-459d-9731-2d6d4a8af50d\",\n        \"name\": \"Flashback #3\",\n        \"slug\": \"flashback-3\",\n        \"location\": \"Paris\",\n        \"organizer\": \"La Phoenix Team / Family\",\n        \"date\": \"2022-02-08T23:00:00.000Z\",\n        \"description\": \"La Phoenix Team / Family vous propose son nouveau concept de soirées qui vous ramèneront dans le passé.\",\n        \"price\": 5.99,\n        \"seats\": 250,\n        \"userId\": \"18f99ff0-f024-4569-b39b-7ade0277ce88\",\n        \"companyId\": \"a42ac85b-220f-4fc4-b3b6-ded00b58f9aa\",\n        \"status\": \"PUBLISHED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n        \"name\": \"NEVER ENDING PARTY\",\n        \"slug\": \"never-ending-party\",\n        \"location\": \"Paris\",\n        \"organizer\": \"MESS\",\n        \"date\": \"2022-02-06T23:00:00.000Z\",\n        \"description\": \"L'adresse sera transmise par mail le jour de l'événement !\",\n        \"price\": 31.8,\n        \"seats\": 100,\n        \"userId\": \"e51b1116-4613-4eaf-82c4-082f5d7ea139\",\n        \"companyId\": \"278fd5c8-7d41-45be-9d97-4dcf34236eea\",\n        \"status\": \"PUBLISHED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"name\": \"Flashback #2\",\n        \"slug\": \"flashback-2\",\n        \"location\": \"Paris\",\n        \"organizer\": \"La Phoenix Team / Family\",\n        \"date\": \"2022-02-07T23:00:00.000Z\",\n        \"description\": \"La Phoenix Team / Family vous propose son nouveau concept de soirées qui vous ramèneront dans le passé.\",\n        \"price\": 5.99,\n        \"seats\": 250,\n        \"userId\": \"18f99ff0-f024-4569-b39b-7ade0277ce88\",\n        \"companyId\": \"a42ac85b-220f-4fc4-b3b6-ded00b58f9aa\",\n        \"status\": \"PUBLISHED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T15:43:30.111Z\"\n    },\n    {\n        \"id\": \"0d839d15-f595-454c-8f47-d885de783e4f\",\n        \"name\": \"Flashmod #1\",\n        \"slug\": \"flashmod-1-la-phoenix-team-family\",\n        \"location\": \"Paris\",\n        \"organizer\": \"La Phoenix Team / Family\",\n        \"date\": \"2022-03-12T00:00:00.000Z\",\n        \"description\": \"La Phoenix Team / Family vous propose son nouveau concept de soirées qui vous ramèneront dans le passé.\",\n        \"price\": 40,\n        \"seats\": 100,\n        \"userId\": \"5cd072d2-96e0-494c-b262-9f56b0f931a1\",\n        \"companyId\": \"a42ac85b-220f-4fc4-b3b6-ded00b58f9aa\",\n        \"status\": \"REWIEW\",\n        \"createdAt\": \"2022-02-06T15:39:57.852Z\",\n        \"updatedAt\": \"2022-02-06T15:39:57.852Z\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get specific event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/event/flashback-2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"event",
+								"flashback-2"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get specific event",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/event/flashback-2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"event",
+										"flashback-2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "526"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"20e-gufCr6GHNmOCGw+8SlVQuouBj3g\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 06 Feb 2022 15:44:39 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n    \"name\": \"Flashback #2\",\n    \"slug\": \"flashback-2\",\n    \"location\": \"Paris\",\n    \"organizer\": \"La Phoenix Team / Family\",\n    \"date\": \"2022-02-07T23:00:00.000Z\",\n    \"description\": \"La Phoenix Team / Family vous propose son nouveau concept de soirées qui vous ramèneront dans le passé.\",\n    \"price\": 5.99,\n    \"seats\": 250,\n    \"userId\": \"18f99ff0-f024-4569-b39b-7ade0277ce88\",\n    \"companyId\": \"a42ac85b-220f-4fc4-b3b6-ded00b58f9aa\",\n    \"status\": \"PUBLISHED\",\n    \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n    \"updatedAt\": \"2022-02-06T15:43:30.111Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get slots available of specific event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/event/flashback-2/available",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"event",
+								"flashback-2",
+								"available"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get slots available of specific event",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/event/flashback-2/available",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"event",
+										"flashback-2",
+										"available"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "44"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"2c-dhGJeOIh3Y/EwuHfcKoSWtyn5qM\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 06 Feb 2022 14:30:44 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"seats\": 250,\n    \"reserved\": 11,\n    \"availables\": 239\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Slot",
+			"item": [
+				{
+					"name": "JWT",
+					"item": [
+						{
+							"name": "Add slot",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: 'https://localhost/authentication_token',",
+											"    method: 'POST',",
+											"    header: {",
+											"        'content-type': 'application/json'",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"email\": \"damso@test.fr\",",
+											"            \"password\": \"testtest\",",
+											"        }),",
+											"    },",
+											"}, (err, res) => pm.environment.set(\"TOKEN\", res.json().token));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NDQxMDMyMTIsImV4cCI6MTY0NDEwNjgxMiwicm9sZXMiOlsiQURNSU4iLCJST0xFX1VTRVIiLCJST0xFX0xFQURFUiJdLCJ1c2VybmFtZSI6InRlc3RAdGVzdC5mciIsImlkIjoiMTZiMjRhYWUtODZhNi0xMWVjLWE4YTMtMDI0MmFjMTIwMDAyIiwiY29tcGFueV9pZCI6IjFlYzg2YWI0LTA5M2QtNmJlNC05MzYyLTc5OTE0NTQ0MTUzMyJ9.kU6j7jw3pmvZVEQlimqAIe5ILqsZ10QYlqXtsOh3yXbKnCpve-8hGl2qWsQ2KCJJlVgzCalwEIZ5NIV7esbOtBC7HgkdG0_Gt0am1mec0POomr-qymEfy9bwQupTxkamuxOjJ6zIAEotQJQkXtVccceGETPfBgFveCg7c7uZ3egAM0tA1THRZuxZH1r2PgvIjcyJIze9w6MKl2gqvC24HsU5Mrt1R9xZgqib-ppZDZsFtBRuJwBLuSRy7ZCIrIVJJcP6ZwO7pYNJ4KpWiPEZM5JLF2EFzt4eIm9x_42Lw8tGPulyiW9xTK1AfzbJ6VUKvF9lhEaobXHM6khYTM_eAQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "quantity",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "eventId",
+											"value": "bca8aec8-b85f-44ea-8c93-0bd5b78d3f26",
+											"type": "text"
+										},
+										{
+											"key": "userId",
+											"value": "1",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/slot",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"slot"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Add slot",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "quantity",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "eventId",
+													"value": "c9da43c3-8380-46d9-aaff-f1be27b27858",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost:3000/slot",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"slot"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "271"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"10f-mwGBWzinleT7pRfOBjtrrZxy05s\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 15:49:20 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"bb4c3534-8b90-48b7-9c89-9d805cfef0fe\",\n    \"transaction\": null,\n    \"quantity\": 1,\n    \"eventId\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n    \"userId\": \"c91ec54e-97d1-411c-920c-e99f0ce2bd4f\",\n    \"status\": \"PENDING\",\n    \"createdAt\": \"2022-02-06T15:49:20.240Z\",\n    \"updatedAt\": \"2022-02-06T15:49:20.240Z\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Get all slot",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NDM5NzY3MzgsImV4cCI6MTY0Mzk4MDMzOCwicm9sZXMiOlsiQURNSU4iLCJST0xFX1VTRVIiXSwidXNlcm5hbWUiOiJ0ZXN0QHRlc3QuZnIifQ.rFyUJGd-jkUnDKQne6CLe4WpzJ-izRhjkAb8qFxPfYMENpR2iZhajOHN0-poA5K2rCsz8IQaiUNgml3DkIW4jIJspdnCtlTRkptzrhivUUMNFf3DJxvOVqwC7HWqX028nOE2GikdzZtyRTi_0P2g1P5cBjzaTS0_W6FdLoU_WIWxR70FqvAxFNifqLAB-GIQYJlQP3btcNJpX9ci0hxFrJyGXRPE6f5p7oCNTU06KRxer_3e6OA234A8hV3iw7E3SbR1vtVdjFL4-LwmyzKQkphps6l9xhqAYeM-RScNsM377lUiT_MHjfz6QCYKv1haXeoQCkLujAREZMLToHnO-g",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/slot",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"slot"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Get all slot",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/slot/all",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"slot",
+												"all"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "4690"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"1252-LKTeSBBCDQhzhuzgyThy6MhkJN4\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 15:55:14 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": \"6d85ba88-7d45-4ec9-b6b3-3a106bca05b5\",\n        \"transaction\": null,\n        \"quantity\": 1,\n        \"eventId\": \"bca8aec8-b85f-44ea-8c93-0bd5b78d3f26\",\n        \"userId\": \"16b24aae-86a6-11ec-a8a3-0242ac120002\",\n        \"status\": \"PENDING\",\n        \"createdAt\": \"2022-02-05T23:20:40.668Z\",\n        \"updatedAt\": \"2022-02-05T23:20:40.668Z\"\n    },\n    {\n        \"id\": \"d79d8579-0ccd-48f8-8f6e-7174b877e205\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 10,\n        \"eventId\": \"c61c2b57-2497-459d-9731-2d6d4a8af50d\",\n        \"userId\": \"0772131d-6f48-4ce3-befb-a2e80d5f16c5\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"d52d7c6f-fa19-4b00-bf28-b5ba23367134\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 2,\n        \"eventId\": \"c61c2b57-2497-459d-9731-2d6d4a8af50d\",\n        \"userId\": \"22824b91-cd56-4ddf-9746-0220a0999dea\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"f3aea511-c934-4503-b5d4-af25efb8d2c4\",\n        \"transaction\": \"\",\n        \"quantity\": 8,\n        \"eventId\": \"c61c2b57-2497-459d-9731-2d6d4a8af50d\",\n        \"userId\": \"278fd5c8-7d41-45be-9d97-4dcf34236eea\",\n        \"status\": \"PENDING\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"e2c6a99f-72b0-470c-9421-af2498f747ba\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 10,\n        \"eventId\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n        \"userId\": \"cdd7d271-797b-44dd-9a95-b50eabdf4141\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"a31b518c-7d64-4930-92a9-701bdcb2a1e5\",\n        \"transaction\": \"\",\n        \"quantity\": 7,\n        \"eventId\": \"c61c2b57-2497-459d-9731-2d6d4a8af50d\",\n        \"userId\": \"ce863755-b387-4aab-9d53-1c91c301c365\",\n        \"status\": \"CANCELED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"9af7fd1b-4403-4ad4-9027-b7575b320881\",\n        \"transaction\": \"\",\n        \"quantity\": 2,\n        \"eventId\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n        \"userId\": \"278fd5c8-7d41-45be-9d97-4dcf34236eea\",\n        \"status\": \"CANCELED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"4ac6e68a-e873-4252-89e8-2b5891cada17\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 1,\n        \"eventId\": \"c61c2b57-2497-459d-9731-2d6d4a8af50d\",\n        \"userId\": \"a18c80c4-acc4-4b24-a62e-aee7d44d47ef\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"190db274-9d37-43b4-8e2f-90534a24a3ad\",\n        \"transaction\": \"\",\n        \"quantity\": 8,\n        \"eventId\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n        \"userId\": \"6f7a115e-7cf4-418d-a8e7-12aa74d5141e\",\n        \"status\": \"PENDING\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"cfa3fd62-1e8d-4fb0-bf1a-1dc405c5fb28\",\n        \"transaction\": \"\",\n        \"quantity\": 10,\n        \"eventId\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"userId\": \"6a0c4510-ae4d-423d-a689-a840fa678283\",\n        \"status\": \"CANCELED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"e6322550-6dea-4678-8ebf-0c19dab22843\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 7,\n        \"eventId\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n        \"userId\": \"a42ac85b-220f-4fc4-b3b6-ded00b58f9aa\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"6c2b4d1f-9d77-4b80-b851-2605bb0313f9\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 2,\n        \"eventId\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"userId\": \"2dd01a48-01ba-4e14-a036-1731381bfa5e\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"e14bc673-ccef-4a40-b327-6b582a2b6b5f\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 1,\n        \"eventId\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n        \"userId\": \"c91ec54e-97d1-411c-920c-e99f0ce2bd4f\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"20852168-98a5-4672-9528-fb55277da10f\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 8,\n        \"eventId\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"userId\": \"234d3af8-d29d-4942-89d7-b2b5a5a9fa1b\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"262caa21-13b7-4787-8b21-f5454393d3c3\",\n        \"transaction\": \"\",\n        \"quantity\": 7,\n        \"eventId\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"userId\": \"ce863755-b387-4aab-9d53-1c91c301c365\",\n        \"status\": \"CANCELED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"a047ad5b-2da3-44b8-85aa-5da2699aca49\",\n        \"transaction\": \"\",\n        \"quantity\": 1,\n        \"eventId\": \"74f4aff0-0998-4322-b876-7b9b09fc28ee\",\n        \"userId\": \"7dc01842-5e33-410e-8afd-8bb441647c78\",\n        \"status\": \"PENDING\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n    },\n    {\n        \"id\": \"bb4c3534-8b90-48b7-9c89-9d805cfef0fe\",\n        \"transaction\": null,\n        \"quantity\": 1,\n        \"eventId\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n        \"userId\": \"c91ec54e-97d1-411c-920c-e99f0ce2bd4f\",\n        \"status\": \"PENDING\",\n        \"createdAt\": \"2022-02-06T15:49:20.240Z\",\n        \"updatedAt\": \"2022-02-06T15:49:20.240Z\"\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Get specific slot",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/slot/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"slot",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Get specific slot",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/slot/4ac6e68a-e873-4252-89e8-2b5891cada17",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"slot",
+												"4ac6e68a-e873-4252-89e8-2b5891cada17"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "280"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"118-dddDulonY7NPh/uNoSeP5wtHo4Y\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 15:53:06 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"4ac6e68a-e873-4252-89e8-2b5891cada17\",\n    \"transaction\": \"4e44f54d6\",\n    \"quantity\": 1,\n    \"eventId\": \"c61c2b57-2497-459d-9731-2d6d4a8af50d\",\n    \"userId\": \"a18c80c4-acc4-4b24-a62e-aee7d44d47ef\",\n    \"status\": \"COMPLETED\",\n    \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n    \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Get my personal slots",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NDM5NzY3MzgsImV4cCI6MTY0Mzk4MDMzOCwicm9sZXMiOlsiQURNSU4iLCJST0xFX1VTRVIiXSwidXNlcm5hbWUiOiJ0ZXN0QHRlc3QuZnIifQ.rFyUJGd-jkUnDKQne6CLe4WpzJ-izRhjkAb8qFxPfYMENpR2iZhajOHN0-poA5K2rCsz8IQaiUNgml3DkIW4jIJspdnCtlTRkptzrhivUUMNFf3DJxvOVqwC7HWqX028nOE2GikdzZtyRTi_0P2g1P5cBjzaTS0_W6FdLoU_WIWxR70FqvAxFNifqLAB-GIQYJlQP3btcNJpX9ci0hxFrJyGXRPE6f5p7oCNTU06KRxer_3e6OA234A8hV3iw7E3SbR1vtVdjFL4-LwmyzKQkphps6l9xhqAYeM-RScNsM377lUiT_MHjfz6QCYKv1haXeoQCkLujAREZMLToHnO-g",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/slot",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"slot"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Get my personal slots",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/slot",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"slot"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "1518"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"5ee-pIibH5an2gG+cUQPu4iyqM8v4C8\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 15:58:29 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": \"e14bc673-ccef-4a40-b327-6b582a2b6b5f\",\n        \"transaction\": \"4e44f54d6\",\n        \"quantity\": 1,\n        \"eventId\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n        \"userId\": \"c91ec54e-97d1-411c-920c-e99f0ce2bd4f\",\n        \"status\": \"COMPLETED\",\n        \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n        \"updatedAt\": \"2022-02-06T12:18:19.877Z\",\n        \"event\": {\n            \"id\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n            \"name\": \"NEVER ENDING PARTY\",\n            \"slug\": \"never-ending-party\",\n            \"location\": \"Paris\",\n            \"organizer\": \"MESS\",\n            \"date\": \"2022-02-06T23:00:00.000Z\",\n            \"description\": \"L'adresse sera transmise par mail le jour de l'événement !\",\n            \"price\": 31.8,\n            \"seats\": 100,\n            \"userId\": \"e51b1116-4613-4eaf-82c4-082f5d7ea139\",\n            \"companyId\": \"278fd5c8-7d41-45be-9d97-4dcf34236eea\",\n            \"status\": \"PUBLISHED\",\n            \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n            \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n        }\n    },\n    {\n        \"id\": \"bb4c3534-8b90-48b7-9c89-9d805cfef0fe\",\n        \"transaction\": null,\n        \"quantity\": 1,\n        \"eventId\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n        \"userId\": \"c91ec54e-97d1-411c-920c-e99f0ce2bd4f\",\n        \"status\": \"PENDING\",\n        \"createdAt\": \"2022-02-06T15:49:20.240Z\",\n        \"updatedAt\": \"2022-02-06T15:49:20.240Z\",\n        \"event\": {\n            \"id\": \"c9da43c3-8380-46d9-aaff-f1be27b27858\",\n            \"name\": \"NEVER ENDING PARTY\",\n            \"slug\": \"never-ending-party\",\n            \"location\": \"Paris\",\n            \"organizer\": \"MESS\",\n            \"date\": \"2022-02-06T23:00:00.000Z\",\n            \"description\": \"L'adresse sera transmise par mail le jour de l'événement !\",\n            \"price\": 31.8,\n            \"seats\": 100,\n            \"userId\": \"e51b1116-4613-4eaf-82c4-082f5d7ea139\",\n            \"companyId\": \"278fd5c8-7d41-45be-9d97-4dcf34236eea\",\n            \"status\": \"PUBLISHED\",\n            \"createdAt\": \"2022-02-06T12:18:19.877Z\",\n            \"updatedAt\": \"2022-02-06T12:18:19.877Z\"\n        }\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Refund",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest({",
+											"    url: 'https://localhost/authentication_token',",
+											"    method: 'POST',",
+											"    header: {",
+											"        'content-type': 'application/json'",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"email\": \"damso@test.fr\",",
+											"            \"password\": \"testtest\",",
+											"        }),",
+											"    },",
+											"}, (err, res) => pm.environment.set(\"TOKEN\", res.json().token));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "http://localhost:3000/slot/4ac6e68a-e873-4252-89e8-2b5891cada17/refund",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"slot",
+										"4ac6e68a-e873-4252-89e8-2b5891cada17",
+										"refund"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Refund",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "http://localhost:3000/slot/4ac6e68a-e873-4252-89e8-2b5891cada17/refund",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"slot",
+												"4ac6e68a-e873-4252-89e8-2b5891cada17",
+												"refund"
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"118-dddDulonY7NPh/uNoSeP5wtHo4Y\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 16:14:31 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "Refund when TooLate",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "http://localhost:3000/slot/4ac6e68a-e873-4252-89e8-2b5891cada17/refund",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"slot",
+												"4ac6e68a-e873-4252-89e8-2b5891cada17",
+												"refund"
+											]
+										}
+									},
+									"status": "Not Acceptable",
+									"code": 406,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "45"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"2d-exyAKs42TPwqjKk7in1hrJtxhlY\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 06 Feb 2022 16:27:51 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"statusCode\": 406,\n    \"message\": \"Not Acceptable\"\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "TOKEN",
+			"value": ""
+		}
+	]
+}
