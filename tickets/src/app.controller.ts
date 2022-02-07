@@ -3,10 +3,14 @@ import { AppService } from './app.service';
 import { CreateDTO } from './dto/create.dto';
 import { UsedDTO } from './dto/used.dto';
 import { UseDTO } from './dto/use.dto';
+import { TicketService } from './ticket/ticket.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly ticketService: TicketService,
+  ) {}
 
   @Get('/:uuid')
   async get(@Param() params) {
@@ -25,6 +29,8 @@ export class AppController {
 
   @Get('/')
   async all(@Query() queryParams) {
+    await this.ticketService.testPublish();
+
     return this.appService.all({
       eventId: queryParams.eventId,
       userId: queryParams.userId,

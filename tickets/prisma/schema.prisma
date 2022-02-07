@@ -9,10 +9,10 @@ generator client {
 }
 
 model Ticket {
-  id   String @id @default(uuid())
-  userId String
-  eventId String
-  data Json
-  used Boolean
+  id        String   @id @default(uuid())
+  userId    String
+  eventId   String
+  data      Json
+  used      Boolean
   createdAt DateTime @default(now())
 }
