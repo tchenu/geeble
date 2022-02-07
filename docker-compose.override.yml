@@ -4,8 +4,8 @@ version: "3.4"
 services:
   php:
     volumes:
-      - ./api:/srv/api:rw,cached
-      - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
+      - ./auth/api:/srv/api:rw,cached
+      - ./auth/api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
       # if you develop on Linux, you may use a bind-mounted host directory instead
       # - ./api/var:/srv/api/var:rw
     environment:
@@ -13,15 +13,15 @@ services:
 
   pwa:
     build:
-      context: ./pwa
+      context: ./auth/pwa
       target: api_platform_pwa_dev
     volumes:
-      - ./pwa:/usr/src/pwa:rw,cached
+      - ./auth/pwa:/usr/src/pwa:rw,cached
 
   caddy:
     volumes:
-      - ./api/docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./api/public:/srv/api/public:ro
+      - ./auth/api/docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./auth/api/public:/srv/api/public:ro
     environment:
       MERCURE_EXTRA_DIRECTIVES: demo
 

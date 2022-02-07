@@ -7,3 +7,12 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model Ticket {
+  id        String   @id @default(uuid())
+  userId    String
+  eventId   String
+  data      Json
+  used      Boolean
+  createdAt DateTime @default(now())
+}
