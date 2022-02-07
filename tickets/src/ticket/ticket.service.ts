@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Subscribe, Payload, Topic, MqttService } from 'nest-mqtt';
+import { Subscribe, Payload, MqttService } from 'nest-mqtt';
 import { PrismaService } from 'src/prisma.service';
 import { toDataURL as QRCode } from 'qrcode';
 import {
@@ -14,28 +14,38 @@ export class TicketService {
     @Inject(MqttService) private readonly mqttService: MqttService,
   ) {}
 
-  @Subscribe('ticket')
-  test(@Payload() payload) {
-    console.log(payload);
+  @Subscribe('create-tickets')
+  async create(@Payload() payload) {
+    for (let i = 0; i < payload.quantity; i++) {
+      await this.prisma.ticket.create({
+        data: {
+          eventId: payload.eventId,
+          userId: payload.userId,
+          companyId: payload.companyId,
+        }
+      });
+    }
   }
 
-  async testPublish() {
-    this.mqttService.publish('topic', {
-      foo: 'bar'
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.TicketWhereUniqueInput;
+    where?: Prisma.TicketWhereInput;
+    orderBy?: Prisma.TicketOrderByWithRelationInput;
+  }): Promise<Ticket[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.ticket.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
     });
   }
 
-  async all(params: {eventId: string, userId: string}): Promise<Ticket[]> {
-    return this.prisma.ticket.findMany({
-      where: {
-        eventId: params.eventId,
-        userId: params.userId
-      }
-    })
-  }
-
-  async get(ticketId: string): Promise<Ticket | null> {
-    return this.prisma.ticket.findFirst({
+  async findOne(ticketId: string): Promise<Ticket | null> {
+    return this.prisma.ticket.findUnique({
       where: {
         id: ticketId
       }
@@ -58,10 +68,6 @@ export class TicketService {
         used: true
       }
     }) == 1;
-  }
-
-  async create(data: Prisma.TicketCreateInput): Promise<Ticket | null> {
-    return this.prisma.ticket.create({data: data});
   }
 
   async generateQRCode(text: string): Promise<string> {

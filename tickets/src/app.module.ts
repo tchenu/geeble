@@ -5,6 +5,7 @@ import { PrismaService } from './prisma.service';
 import { MqttModule } from 'nest-mqtt';
 import { TicketModule } from './ticket/ticket.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ConfigModule } from '@nestjs/config';
       clean: false ,
     }),
     TicketModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -1,11 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, Request, HttpException } from '@nestjs/common';
 import { SlotService } from './slot.service';
 import { CreateSlotDto } from './dto/create-slot.dto';
-import { UpdateSlotDto } from './dto/update-slot.dto';
 import { ValidationPipe } from 'src/validation.pipe';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { EventService } from 'src/event/event.service';
-import { gateAdmin, gateExists, gateOwn, gateRoles, gateTooLate } from 'src/slot/event.gate';
+import { gateAdmin, gateExists, gateOwnSlot, gateRoles, gateTooLate } from 'src/gate';
 import { Roles } from 'src/user/roles.enum';
 import { SlotStatus } from '@prisma/client';
 
@@ -21,9 +20,12 @@ export class SlotController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Request() req, @Body(new ValidationPipe()) createEventDto: CreateSlotDto) {
-    gateRoles([Roles.ROLE_USER], req.user)
+    const event = await this.eventService.findOne({slug: createEventDto.slug})
 
-    return this.slotService.create(createEventDto, req.user.id);
+    gateRoles([Roles.ROLE_USER], req.user)
+    gateExists(event)
+
+    return this.slotService.create(req.user.id, event.id, event.companyId, createEventDto.quantity);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -37,8 +39,6 @@ export class SlotController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async findMine(@Request() req) {
-    gateAdmin(req.user)
-
     return this.slotService.findAllWithEvent({ where: { userId: req.user.id } });
   }
 
@@ -57,7 +57,7 @@ export class SlotController {
     const slot = await this.slotService.findOneWithEvent({id: id})
 
     gateExists(slot)
-    gateOwn(slot, req.user)
+    gateOwnSlot(slot, req.user)
     gateTooLate(slot)
 
     return this.slotService.update({ where: { id: id }, data: { status: SlotStatus.REFOUND}});

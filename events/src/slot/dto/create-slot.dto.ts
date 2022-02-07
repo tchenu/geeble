@@ -9,5 +9,5 @@ export class CreateSlotDto {
 
     @IsNotEmpty()
     @IsString()
-    eventId: string;
+    slug: string;
 }
