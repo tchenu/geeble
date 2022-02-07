@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UsedTicketDto } from './dto/used-ticket.dto';
-import { UseTicketDto } from './dto/use-ticket.dto';
+import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { TicketService } from './ticket.service';
 
 @Controller('ticket')
@@ -14,13 +13,13 @@ export class TicketController {
   }
 
   @Get('/used')
-  async used(@Body() useTicketDto: UsedTicketDto) {
-    return this.ticketService.used(useTicketDto.ticketId);
+  async used(@Body() updateTicketDto: UpdateTicketDto) {
+    return this.ticketService.used(updateTicketDto.ticketId);
   }
 
   @Post('/use')
-  async use(@Body() useTicketDto: UseTicketDto) {
-    return this.ticketService.use(useTicketDto.ticketId);
+  async use(@Body() updateTicketDto: UpdateTicketDto) {
+    return this.ticketService.use(updateTicketDto.ticketId);
   }
 
   @Get('/')
@@ -37,7 +36,7 @@ export class TicketController {
   async create(@Body() createTicketDto: CreateTicketDto) {
     const tickets = [];
 
-    for (let i = 0; i < createTicketDto.count; i++) {
+    for (let i = 0; i < createTicketDto.quantity; i++) {
       tickets.push(await this.ticketService.create({
         eventId: createTicketDto.eventId,
         userId: createTicketDto.userId,

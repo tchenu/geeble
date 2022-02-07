@@ -14,7 +14,7 @@ export class TicketService {
     @Inject(MqttService) private readonly mqttService: MqttService,
   ) {}
 
-  @Subscribe('topic')
+  @Subscribe('ticket')
   test(@Payload() payload) {
     console.log(payload);
   }
