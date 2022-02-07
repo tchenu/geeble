@@ -6,10 +6,22 @@ import { EventModule } from './event/event.module';
 import { SlotModule } from './slot/slot.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { MqttModule } from 'nest-mqtt';
 
 @Module({
+  imports: [
+    ConfigModule.forRoot(),
+    MqttModule.forRoot({
+      host: process.env.MQTT_HOST,
+      port: Number(process.env.MQTT_PORT),
+      clientId: process.env.MQTT_CLIENT_ID,
+      clean: false ,
+    }),
+    EventModule,
+    SlotModule,
+    AuthModule
+  ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
-  imports: [ConfigModule.forRoot(), EventModule, SlotModule, AuthModule],
 })
 export class AppModule {}

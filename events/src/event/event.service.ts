@@ -1,18 +1,21 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import {
   Event,
   Prisma,
-  Slot,
   SlotStatus
 } from '@prisma/client';
 import slugify from 'slugify';
+import { MqttService } from 'nest-mqtt';
 
 @Injectable()
 export class EventService {
-  constructor(private prisma: PrismaService) {}
-  
+  constructor(
+    private prisma: PrismaService,
+    @Inject(MqttService) private readonly mqttService: MqttService,
+  ) {}
+
   async create(createEventDto: CreateEventDto, userId: string, companyId: string) {
     const slug = slugify(`${createEventDto.name} ${createEventDto.organizer}`, {lower: true, strict: true});
 
@@ -82,7 +85,7 @@ export class EventService {
     companyId: string;
   }): Promise<Event> {
     const { where, data, companyId } = params;
-        
+
     return this.prisma.event.update({
       data,
       where,
