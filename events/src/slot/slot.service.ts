@@ -1,23 +1,34 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateSlotDto } from './dto/create-slot.dto';
 import {
   Slot,
   Prisma,
 } from '@prisma/client';
+import { MqttService } from 'nest-mqtt';
 
 
 @Injectable()
 export class SlotService {
-  constructor(private prisma: PrismaService) {}
-  
-  async create(createSlotDto: CreateSlotDto, userId: string) {
+  constructor(
+    private prisma: PrismaService,
+    @Inject(MqttService) private readonly mqttService: MqttService,
+  ) {}
+
+  async create(userId: string, eventId: string, companyId: string, quantity: number) {
+    this.mqttService.publish('create-tickets', {
+      eventId: eventId,
+      userId: userId,
+      companyId: companyId,
+      quantity: quantity,
+    });
+
     return this.prisma.slot.create({
       data: {
-        quantity: createSlotDto.quantity,
+        quantity: quantity,
         userId: userId,
-        event: { 
-          connect: { id: createSlotDto.eventId }
+        event: {
+          connect: { id: eventId }
         }
       },
     });
