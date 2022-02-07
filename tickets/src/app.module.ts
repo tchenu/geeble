@@ -3,16 +3,21 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';
 import { MqttModule } from 'nest-mqtt';
-import { TicketService } from './ticket/ticket.service';
+import { TicketModule } from './ticket/ticket.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [MqttModule.forRoot({
-      host: '0.0.0.0',
-      port: 1883,
-      clientId: 'emqx',
+  imports: [
+    ConfigModule.forRoot(),
+    MqttModule.forRoot({
+      host: process.env.MQTT_HOST,
+      port: Number(process.env.MQTT_PORT),
+      clientId: process.env.MQTT_CLIENT_ID,
       clean: false ,
-    })],
+    }),
+    TicketModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, TicketService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}
