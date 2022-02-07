@@ -28,6 +28,7 @@
   yarn
   npx prisma generate
   npx prisma migrate deploy
+  npx prisma db seed
   yarn start:run
 
   # Events - Microservice - Port 3002
