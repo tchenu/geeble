@@ -89,9 +89,18 @@ export class EventController {
 
   @Get()
   async findAll(@Query() query: QueryEventDto) {
+    const today = new Date()
+    today.setHours(0,0,0,0)
+
     return this.eventService.findAll({
       skip: query.skip,
-      take: query.take
+      take: query.take,
+      orderBy: {date: "asc"},
+      where: {
+        date: {
+          gte: today
+        },
+      },
     });
   }
 

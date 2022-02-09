@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional } from 'class-validator';
+import { IsInt, IsObject, IsOptional } from 'class-validator';
 
 export class QueryEventDto {
     @Type(() => Number)
