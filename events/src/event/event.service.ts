@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
+import { MeiliSearch } from 'meilisearch'
 import {
   Event,
   Prisma,
@@ -11,10 +12,15 @@ import { MqttService } from 'nest-mqtt';
 
 @Injectable()
 export class EventService {
+  private meilisearch: MeiliSearch;
   constructor(
     private prisma: PrismaService,
     @Inject(MqttService) private readonly mqttService: MqttService,
-  ) {}
+  ) {
+    this.meilisearch = new MeiliSearch({
+      host: process.env.MEILISEARCH_HOST,
+    })
+  }
 
   async create(createEventDto: CreateEventDto, userId: string, companyId: string) {
     const slug = slugify(`${createEventDto.name} ${createEventDto.organizer}`, {lower: true, strict: true});
@@ -23,7 +29,7 @@ export class EventService {
       throw new HttpException("slug must be unique", HttpStatus.BAD_REQUEST);
     }
 
-    return this.prisma.event.create({
+    const event = this.prisma.event.create({
       data: {
         ...createEventDto,
         slug: slug,
@@ -31,6 +37,15 @@ export class EventService {
         companyId: companyId
       },
     });
+
+    this.meilisearch.index('events').addDocuments([
+      {
+        id: event.id,
+        name: event.name,
+      }
+    ])
+
+    return event;
   }
 
   async findAll(params: {
