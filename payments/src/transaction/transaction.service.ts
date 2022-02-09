@@ -33,7 +33,7 @@ export class TransactionService {
 
     return {
       slotId: transaction.id,
-      intentionId: intention.client_secret,
+      clientSecret: intention.client_secret,
     };
   }
 

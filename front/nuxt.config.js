@@ -66,6 +66,7 @@ export default {
     // Doc: https://github.com/nuxt/content
     "@nuxt/content",
     "@nuxtjs/auth",
+    "nuxt-stripe-module",
   ],
   /*
    ** Content module configuration
@@ -90,5 +91,8 @@ export default {
     message: process.env.VUE_APP_MESSAGINGSENDERID,
     appid: process.env.VUE_APP_APPId,
     measurement: process.env.VUE_APP_MEASUREMENTID,
+  },
+  stripe: {
+    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
   },
 };

@@ -11,7 +11,7 @@ export class TransactionController {
     private readonly transactionService: TransactionService,
   ) {}
 
-  /* JwtAuthGuard routes */
+  /* Api-key AuthGuard routes */
 
   @UseGuards(AuthGuard('api-key'))
   @Post('/intention')
