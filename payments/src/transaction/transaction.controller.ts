@@ -1,4 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, Request, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ValidationPipe } from 'src/validation.pipe';
+import { CreateTransationDto } from './dto/create-transaction.dto';
 import { TransactionService } from './transaction.service';
 
 @Controller('transactions')
@@ -9,10 +12,10 @@ export class TransactionController {
 
   /* JwtAuthGuard routes */
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard('api-key'))
   @Post('/intention')
-  async create(@Request() req, @Body() body) {
-    return await this.transactionService.create(body.ticketId);
+  async create(@Body(new ValidationPipe()) createTransationDto: CreateTransationDto) {
+    return await this.transactionService.create(createTransationDto);
   }
 
   @Get(':id')

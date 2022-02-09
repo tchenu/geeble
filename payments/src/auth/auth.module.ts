@@ -3,6 +3,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
+import { HeaderApiKeyStrategy } from './api-key.strategy';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { JwtStrategy } from './jwt.strategy';
       signOptions: { expiresIn: '60s' },
     }),
   ],
-  providers: [JwtStrategy],
+  providers: [JwtStrategy, HeaderApiKeyStrategy],
   exports: [],
 })
 export class AuthModule {}
