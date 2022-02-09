@@ -7,7 +7,6 @@ import { MqttModule } from 'nest-mqtt';
 import { TransactionModule } from './transaction/transaction.module';
 import { WebhookModule } from './webhook/webhook.module';
 import { AuthModule } from './auth/auth.module';
-import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { StripeModule } from './stripe/stripe.module';
     TransactionModule,
     WebhookModule,
     AuthModule,
-    StripeModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
