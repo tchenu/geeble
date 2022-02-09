@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, Request, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, HttpCode, HttpStatus, UseGuards, Request, Response } from '@nestjs/common';
 import { SlotService } from './slot.service';
 import { CreateSlotDto } from './dto/create-slot.dto';
 import { ValidationPipe } from 'src/validation.pipe';
@@ -7,6 +7,7 @@ import { EventService } from 'src/event/event.service';
 import { gateAdmin, gateExists, gateOwnSlot, gateRoles, gateTooLate } from 'src/gate';
 import { Roles } from 'src/user/roles.enum';
 import { SlotStatus } from '@prisma/client';
+import { ProcessSlotDto } from './dto/process-slot.dto';
 
 @Controller('slot')
 export class SlotController {
@@ -19,13 +20,19 @@ export class SlotController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Request() req, @Body(new ValidationPipe()) createEventDto: CreateSlotDto) {
+  async create(@Request() req, @Response() res, @Body(new ValidationPipe()) createEventDto: CreateSlotDto) {
     const event = await this.eventService.findOne({slug: createEventDto.slug})
 
     gateRoles([Roles.ROLE_USER], req.user)
     gateExists(event)
 
-    return this.slotService.create(req.user.id, event.id, event.companyId, createEventDto.quantity);
+    const processSlotDto = new ProcessSlotDto();
+    processSlotDto.userId = req.user.id;
+    processSlotDto.eventId = event.id;
+    processSlotDto.quantity = createEventDto.quantity;
+    processSlotDto.amount = Number((event.price * createEventDto.quantity).toFixed(2)) * 100
+
+    return res.json(await this.slotService.create(processSlotDto));
   }
 
   @UseGuards(JwtAuthGuard)
