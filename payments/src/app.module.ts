@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MqttModule } from 'nest-mqtt';
 import { TransactionModule } from './transaction/transaction.module';
 import { WebhookModule } from './webhook/webhook.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { WebhookModule } from './webhook/webhook.module';
       clean: false ,
     }),
     TransactionModule,
-    WebhookModule
+    WebhookModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
