@@ -7,6 +7,9 @@ import { SlotModule } from './slot/slot.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MqttModule } from 'nest-mqtt';
+import { StatController } from './stat/stat.controller';
+import { StatService } from './stat/stat.service';
+import { StatModule } from './stat/stat.module';
 
 @Module({
   imports: [
@@ -19,7 +22,8 @@ import { MqttModule } from 'nest-mqtt';
     }),
     EventModule,
     SlotModule,
-    AuthModule
+    AuthModule,
+    StatModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
