@@ -108,6 +108,15 @@ services:
     ports:
       - "1883:1883"
 
+  search:
+    image: getmeili/meilisearch:v0.25.2
+    restart: always
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=!ChangeMe!
+    volumes:
+      - search_data:/data.ms
 
 volumes:
   php_socket:
@@ -117,3 +126,4 @@ volumes:
   db_event_data:
   db_payment_data:
   db_ticket_data:
+  search_data:
