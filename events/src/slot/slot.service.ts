@@ -1,37 +1,46 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreateSlotDto } from './dto/create-slot.dto';
 import {
   Slot,
   Prisma,
 } from '@prisma/client';
-import { MqttService } from 'nest-mqtt';
+import { MqttService, Payload, Subscribe } from 'nest-mqtt';
+import { ProcessSlotDto } from './dto/process-slot.dto';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 
 @Injectable()
 export class SlotService {
   constructor(
     private prisma: PrismaService,
+    private httpService: HttpService,
     @Inject(MqttService) private readonly mqttService: MqttService,
   ) {}
 
-  async create(userId: string, eventId: string, companyId: string, quantity: number) {
-    this.mqttService.publish('create-tickets', {
-      eventId: eventId,
-      userId: userId,
-      companyId: companyId,
-      quantity: quantity,
-    });
-
-    return this.prisma.slot.create({
+  async create(processSlotDto: ProcessSlotDto) {
+    const slot = await this.prisma.slot.create({
       data: {
-        quantity: quantity,
-        userId: userId,
+        quantity: processSlotDto.quantity,
+        userId: processSlotDto.userId,
         event: {
-          connect: { id: eventId }
+          connect: { id: processSlotDto.eventId }
         }
       },
     });
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post(`${process.env.PAYMENT_DOMAIN}/transactions/intention`, {
+          slotId: slot.id,
+          amount: processSlotDto.amount
+        }, { headers: { "x-api-key": process.env.API_KEY }})
+      );
+
+      return response.data;
+    } catch(exception) {
+      throw new HttpException("Unauthorizde", HttpStatus.UNAUTHORIZED)
+    }
   }
 
   async findAll(params: {
