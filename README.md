@@ -13,7 +13,7 @@
   # API Platform
   ./auth/bin/console.sh doctrine:fixtures:load
 
-  # Events - Microservice - Port 3000
+  # Events - Microservice - Port 3003
   cp ./events/.env.example ./events/.env
   cd events
   yarn
