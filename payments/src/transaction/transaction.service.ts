@@ -1,48 +1,38 @@
-import { Inject, Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { Status } from './enums/status.enum';
-import { Currency } from './enums/currency';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import {
   Transaction,
   Prisma,
+  TransactionStatus,
+  TransactionCurrency,
 } from '@prisma/client';
-import { MqttService } from 'nest-mqtt';
-import Stripe from 'stripe';
+import { CreateTransationDto } from './dto/create-transaction.dto';
+import { Stripe } from 'src/stripe/stripe'
 
 @Injectable()
 export class TransactionService {
   constructor(
     private prisma: PrismaService,
-    @Inject(MqttService) private readonly mqttService: MqttService,
   ) {}
 
-  async create(ticketId: string) {
-    const stripe = new Stripe(
-      process.env.STRIPE_SECRET_KEY,
-      {apiVersion: null},
-    );
-
-    //@todo: need an endpoint to get amount for specific order
-    const amount = 1000; // (1000 = 10 units)
-
-    const intention = await stripe.paymentIntents.create({
-      amount: amount,
-      currency: Currency.EUR,
+  async create(createTransationDto: CreateTransationDto) {
+    const intention = await Stripe.paymentIntents.create({
+      amount: createTransationDto.amount,
+      currency: TransactionCurrency.EUR,
     })
 
     const transaction = await this.prisma.transaction.create({
       data: {
-        ticketId: ticketId,
+        ticketId: createTransationDto.slotId,
         intentionId: intention.id,
-        amount: amount,
-        currency: Currency.EUR,
-        status: Status.Init,
+        amount: createTransationDto.amount,
       },
     });
 
-    transaction['intentionSecret'] = intention.client_secret;
-
-    return transaction;
+    return {
+      slotId: transaction.id,
+      intentionId: intention.client_secret,
+    };
   }
 
   async findOne(slotWhereUniqueInput: Prisma.TransactionWhereUniqueInput): Promise<Transaction> {
@@ -56,16 +46,11 @@ export class TransactionService {
       where: slotWhereUniqueInput,
     });
 
-    if (transaction.status !== Status.Captured) {
+    if (transaction.status !== TransactionStatus.CAPTURED) {
       throw new HttpException('Transaction is not captured', HttpStatus.FORBIDDEN);
     }
 
-    const stripe = new Stripe(
-      process.env.STRIPE_SECRET_KEY,
-      {apiVersion: null},
-    );
-
-    const refund = await stripe.refunds.create({
+    const refund = await Stripe.refunds.create({
       payment_intent: transaction.intentionId,
     });
 
@@ -73,7 +58,7 @@ export class TransactionService {
       where: slotWhereUniqueInput,
       data: {
         refundId: refund.id,
-        status: Status.Refunded,
+        status: TransactionStatus.REFUNDED,
       },
     });
 
