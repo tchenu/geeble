@@ -3,8 +3,18 @@
 [Open PR master -> production](https://github.com/tchenu/geeble/compare/production...master?expand=1)
 
 [Open PR master -> preproduction](https://github.com/tchenu/geeble/compare/preproduction...master?expand=1)
+## Stack
 
-## Init Projet
+- 📦 API Platform
+- 📦 Nuxt 3
+- 📦 NestJS
+- 🔎 Meilisearch
+- 💿 Postgresql
+- 💭 MQTT
+- ☁️ Heroku
+- ☁️ Vercel
+
+## Setup
 
 ```bash
   docker-compose up -d
@@ -22,7 +32,7 @@
   npx prisma db seed
   yarn start:run
 
-  # Events - Microservice - Port 3001
+  # Tickets - Microservice - Port 3001
   cp ./tickets/.env.example ./tickets/.env
   cd tickets
   yarn
@@ -31,30 +41,15 @@
   npx prisma db seed
   yarn start:run
 
-  # Events - Microservice - Port 3002
-  cp ./tickets/.env.example ./tickets/.env
-  cd tickets
+  # Payments - Microservice - Port 3002
+  cp ./payments/.env.example ./payments/.env
+  cd payments
   yarn
   npx prisma generate
   npx prisma migrate deploy
   yarn start:run
 
 ```
-
-## Stack
-
-- 📦 API Platform
-- 📦 Nuxt 3
-- 📦 NestJS
-- 🔎 Meilisearch
-- 💿 Postgresql
-- 💭 MQTT
-- ☁️ Heroku
-- ☁️ Vercel
-
-## Setup
-
-@TODO
 
 ## Infrastructure
 

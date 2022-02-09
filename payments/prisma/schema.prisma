@@ -7,3 +7,15 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model Transaction {
+  id          String      @id @default(uuid())
+  ticketId    String
+  intentionId String
+  refundId    String?
+  amount      Int
+  currency    String
+  status      String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now()) @updatedAt
+}
