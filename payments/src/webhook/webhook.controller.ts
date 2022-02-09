@@ -11,7 +11,7 @@ export class WebhookController {
   @Post('/stripe')
   async stripe(@Body() body) {
     const event = body
-
+    /**
     switch (event.type) {
       case 'payment_intent.succeeded':
         this.transactionService.update(
@@ -19,6 +19,7 @@ export class WebhookController {
           data: { status: Status.Captured}}
         );
     }
+    */
     
     return {};
   }
