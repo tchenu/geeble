@@ -1,0 +1,21 @@
+//
+// Round slider
+//
+
+.vnis__button {
+  background: $primary !important;
+}
+
+.product-cart-touchspin {
+  .vnis__button {
+    background: none !important;
+    color: black;
+  }
+}
+
+.vnis__input {
+  border: 1px solid $input-border-color !important;
+  background-color: rgba($topbar-search-bg, 0.02);
+  color: $input-color;
+}
+
