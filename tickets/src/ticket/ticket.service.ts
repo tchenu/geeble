@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Subscribe, Payload, MqttService } from 'nest-mqtt';
 import { PrismaService } from 'src/prisma.service';
 import { toDataURL as QRCode } from 'qrcode';
@@ -9,6 +9,8 @@ import {
 
 @Injectable()
 export class TicketService {
+  private readonly logger = new Logger(TicketService.name);
+
   constructor(
     private prisma: PrismaService,
     @Inject(MqttService) private readonly mqttService: MqttService,
@@ -16,13 +18,13 @@ export class TicketService {
 
   @Subscribe('create-tickets')
   async create(@Payload() payload) {
+    const {eventId, userId, companyId, slotId} = payload
+
+    this.logger.log(`Create ${payload.quantity} tickets for ${slotId}`)
+
     for (let i = 0; i < payload.quantity; i++) {
       await this.prisma.ticket.create({
-        data: {
-          eventId: payload.eventId,
-          userId: payload.userId,
-          companyId: payload.companyId,
-        }
+        data: { eventId, userId, companyId, slotId}
       });
     }
   }

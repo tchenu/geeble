@@ -11,20 +11,24 @@ generator client {
 model Transaction {
   id          String              @id @default(uuid())
   ticketId    String
-  intentionId String
+  intentionId String              @unique
   refundId    String?
   amount      Int
   currency    TransactionCurrency @default(EUR)
-  status      TransactionStatus   @default(INIT)
+  status      TransactionStatus   @default(requires_payment_method)
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @default(now()) @updatedAt
 }
 
 enum TransactionStatus {
-  INIT
-  CAPTURED
-  FAILED
-  REFUNDED
+  canceled
+  processing
+  requires_action
+  requires_capture
+  requires_confirmation
+  requires_payment_method
+  succeeded
+  refunded
 }
 
 enum TransactionCurrency {

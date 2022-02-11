@@ -13,6 +13,7 @@ model Ticket {
   userId    String
   eventId   String
   companyId String
+  slotId    String
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
 }

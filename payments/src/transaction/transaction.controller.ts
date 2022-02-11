@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request, Response } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ValidationPipe } from 'src/validation.pipe';
 import { CreateTransationDto } from './dto/create-transaction.dto';
 import { TransactionService } from './transaction.service';
@@ -18,9 +19,13 @@ export class TransactionController {
     return await this.transactionService.create(createTransationDto);
   }
 
-  @Get(':id')
-  async findOne(@Request() req, @Param('id') id: string) {
-    return this.transactionService.findOne({ id: id });
+  /* Unprotected routes */
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  async confirmPayment(@Response() res, @Body('intentionId') intentionId: string) {
+    return res.json({
+      status: this.transactionService.confirmPayment({ intentionId: intentionId })
+    })
   }
 
   @Post(':id/refund')
