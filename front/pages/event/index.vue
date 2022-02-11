@@ -1,6 +1,5 @@
 <script>
 import { eventService } from '../../helpers/event.service'
-import Buttons from '../ui/buttons.vue';
 
 export default {
     head() {

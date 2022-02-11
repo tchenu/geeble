@@ -1,6 +1,6 @@
 <script>
-import { eventService } from '../../helpers/event.service'
-import { slotService } from '../../helpers/slot.service'
+import { eventService } from '../../../helpers/event.service'
+import { slotService } from '../../../helpers/slot.service'
 import NumberInputSpinner from "vue-number-input-spinner";
 
 
@@ -20,7 +20,8 @@ export default {
             event: {},
             available: {},
             quantity: 0,
-            paymentElement: null
+            paymentElement: null,
+            elements: null,
         };
     },
     async asyncData({ params }) {
@@ -54,21 +55,6 @@ export default {
             return (price).toFixed(2);
         }
     },
-    methods: {
-        submitCart: async function() {
-            const {slotId, clientSecret} = await slotService.add(this.event.slug, this.quantity);
-
-            console.log({ clientSecret })
-
-            if (this.$stripe) {
-                const elements = this.$stripe.elements({ clientSecret });
-
-                this.paymentElement = elements.create("payment")
-                this.paymentElement.mount("#payment-element")
-
-            }
-        }
-    }
 };
 </script>
 
@@ -120,20 +106,15 @@ export default {
                         </div>
                         <h5>Total</h5>
                     </div>
-                    <div v-show="!paymentElement">
-                        <button v-on:click="submitCart" :disabled="!quantity" class="btn btn-success mt-5 w-100">Checkout</button>
+                    <div>
+                        <nuxt-link 
+                            :to="event.slug + '/checkout/' + quantity"
+                            :event="!quantity ? '' : 'click'"
+                            class="btn btn-success mt-5 w-100"
+                            :class="!quantity ? 'disabled' : ''">
+                            Checkout
+                        </nuxt-link>
                     </div>
-
-                    <form v-show="paymentElement" id="payment-form" class="mt-5">
-                        <div id="payment-element">
-                            <!--Stripe.js injects the Payment Element-->
-                        </div>
-                        <button id="submit" class="btn btn-success mt-3 w-100">
-                            <div class="spinner hidden" id="spinner"></div>
-                            <span id="button-text">Pay now</span>
-                        </button>
-                        <div id="payment-message" class="hidden"></div>
-                    </form>
                 </div>
             </div>
         </div>
