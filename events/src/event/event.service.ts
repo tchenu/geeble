@@ -17,7 +17,7 @@ export class EventService {
   ) {}
 
   async create(createEventDto: CreateEventDto, userId: string, companyId: string) {
-    const slug = slugify(`${createEventDto.name} ${createEventDto.organizer}`, {lower: true, strict: true});
+    const slug = slugify(createEventDto.name, {lower: true, strict: true});
 
     if(await this.findOne({slug: slug})) {
       throw new HttpException("slug must be unique", HttpStatus.BAD_REQUEST);
@@ -87,8 +87,8 @@ export class EventService {
     const { where, data, companyId } = params;
 
     return this.prisma.event.update({
-      data,
       where,
+      data,
     });
   }
 }

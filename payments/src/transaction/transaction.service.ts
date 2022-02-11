@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import {
   Transaction,
@@ -8,11 +8,13 @@ import {
 } from '@prisma/client';
 import { CreateTransationDto } from './dto/create-transaction.dto';
 import { Stripe } from 'src/stripe/stripe'
+import { MqttService } from 'nest-mqtt';
 
 @Injectable()
 export class TransactionService {
   constructor(
     private prisma: PrismaService,
+    @Inject(MqttService) private readonly mqttService: MqttService,
   ) {}
 
   async create(createTransationDto: CreateTransationDto) {
@@ -35,9 +37,20 @@ export class TransactionService {
     };
   }
 
-  async findOne(slotWhereUniqueInput: Prisma.TransactionWhereUniqueInput): Promise<Transaction> {
+  async findOne(intentionWhereUniqueInput: Prisma.TransactionWhereUniqueInput) {
     return this.prisma.transaction.findUnique({
-      where: slotWhereUniqueInput,
+      where: intentionWhereUniqueInput,
+    });
+  }
+
+  async update(params: {
+    where: Prisma.TransactionWhereUniqueInput;
+    data: Prisma.TransactionWhereInput;
+  }): Promise<Transaction> {
+    const { where, data } = params;
+    return this.prisma.transaction.update({
+      where,
+      data
     });
   }
 
@@ -46,7 +59,7 @@ export class TransactionService {
       where: slotWhereUniqueInput,
     });
 
-    if (transaction.status !== TransactionStatus.CAPTURED) {
+    if (transaction.status !== TransactionStatus.succeeded) {
       throw new HttpException('Transaction is not captured', HttpStatus.FORBIDDEN);
     }
 
@@ -58,10 +71,31 @@ export class TransactionService {
       where: slotWhereUniqueInput,
       data: {
         refundId: refund.id,
-        status: TransactionStatus.REFUNDED,
+        status: TransactionStatus.refunded,
       },
     });
 
     return updatedTransaction;
+  }
+
+  async confirmPayment(intentionWhereUniqueInput: Prisma.TransactionWhereUniqueInput) {
+    const transaction = await this.findOne(intentionWhereUniqueInput);
+
+    if (transaction.status != TransactionStatus.requires_payment_method) return
+
+    const paymentIntents = await Stripe.paymentIntents.retrieve(transaction.intentionId)
+
+    this.update({
+      where: intentionWhereUniqueInput,
+      data: { status: paymentIntents.status}
+    });
+
+    this.mqttService.publish('confirm-payment', {
+      slotId: transaction.ticketId,
+      transactionId: transaction.id,
+      status: paymentIntents.status
+    });
+
+    return paymentIntents.status
   }
 }

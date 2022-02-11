@@ -1,8 +1,9 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import {
   Slot,
   Prisma,
+  SlotStatus,
 } from '@prisma/client';
 import { MqttService, Payload, Subscribe } from 'nest-mqtt';
 import { ProcessSlotDto } from './dto/process-slot.dto';
@@ -12,6 +13,8 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class SlotService {
+  private readonly logger = new Logger(SlotService.name);
+
   constructor(
     private prisma: PrismaService,
     private httpService: HttpService,
@@ -37,7 +40,7 @@ export class SlotService {
         }, { headers: { "x-api-key": process.env.API_KEY }})
       );
 
-      return response.data;
+      return response.data.clientSecret;
     } catch(exception) {
       throw new HttpException("Unauthorizde", HttpStatus.UNAUTHORIZED)
     }
@@ -110,5 +113,49 @@ export class SlotService {
     await this.prisma.slot.delete({
       where,
     });
+  }
+
+  @Subscribe('confirm-payment')
+  async confirmPayment(@Payload() payload) {
+    const {slotId, transactionId, status} = payload
+
+    const convertedStatus = this.convertStripeStatus(status);
+
+    this.update({
+      where: { id: slotId },
+      data: {
+        transaction: transactionId,
+        status: convertedStatus
+      }
+    });
+
+    const slot = await this.findOneWithEvent({id: slotId});
+
+    if (convertedStatus == SlotStatus.COMPLETED) {
+      this.logger.log(`Ask the creation of ${slot.quantity} tickets for ${slot.id}`)
+
+      this.mqttService.publish('create-tickets', {
+        userId: slot.userId,
+        eventId: slot.eventId,
+        companyId: slot.event.companyId,
+        slotId: slot.id,
+        quantity: slot.quantity
+      })
+    }
+  }
+
+  convertStripeStatus(status: string): SlotStatus {
+    const convert = {
+      canceled: SlotStatus.CANCELED,
+      processing: SlotStatus.PENDING,
+      requires_action: SlotStatus.PENDING,
+      requires_capture: SlotStatus.PENDING,
+      requires_confirmation: SlotStatus.PENDING,
+      requires_payment_method: SlotStatus.PENDING,
+      succeeded: SlotStatus.COMPLETED,
+      refunded: SlotStatus.REFOUND,
+    };
+
+    return convert[status]
   }
 }
