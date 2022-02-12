@@ -29,9 +29,13 @@ class Company
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: User::class)]
     private $users;
 
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Payout::class)]
+    private $payouts;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->payouts = new ArrayCollection();
     }
 
     public function getId(): Uuid
@@ -94,6 +98,36 @@ class Company
             // set the owning side to null (unless already changed)
             if ($user->getCompany() === $this) {
                 $user->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Payout[]
+     */
+    public function getPayouts(): Collection
+    {
+        return $this->payouts;
+    }
+
+    public function addPayout(Payout $payout): self
+    {
+        if (!$this->payouts->contains($payout)) {
+            $this->payouts[] = $payout;
+            $payout->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayout(Payout $payout): self
+    {
+        if ($this->payouts->removeElement($payout)) {
+            // set the owning side to null (unless already changed)
+            if ($payout->getCompany() === $this) {
+                $payout->setCompany(null);
             }
         }
 

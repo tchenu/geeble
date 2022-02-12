@@ -3,7 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Entity\Article;
 use App\Entity\Company;
+use App\Entity\Category;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\Persistence\ObjectManager;
@@ -37,6 +39,30 @@ class AppFixtures extends Fixture
             $manager->persist($user);
         }
 
+        $categories = [];
+
+        foreach ($this->getCategories() as $key => $data) {
+            $category = $this->getCategory($data);
+
+            $metadata = $manager->getClassMetaData(Category::class);
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new AssignedGenerator());
+
+            $manager->persist($category);
+
+            $categories[$key] = $category;
+        }
+
+        foreach ($this->getArticles() as $data) {
+            $article = $this->getArticle($data, $categories);
+
+            $metadata = $manager->getClassMetaData(Category::class);
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new AssignedGenerator());
+
+            $manager->persist($article);
+        }
+
         $manager->flush();
     }
 
@@ -60,6 +86,73 @@ class AppFixtures extends Fixture
         return $data['company']
             ? $user->setCompany($companies[$data['company']])
             : $user;
+    }
+
+    private function getCategory(array $data)
+    {
+        return
+            (new Category())
+                ->setId(Uuid::fromString($data['id']))
+                ->setSlug($data['slug'])
+                ->setLabel($data['label']);
+    }
+
+    private function getCategories()
+    {
+        return [
+            'feel-the-groove' => [
+                'id' => '278fd5c8-7d41-45be-9d97-4dcf34236eeb',
+                'label' => 'Feel the groove',
+                'slug' => 'feel-the-groove',
+            ],
+
+            'techno-basics' => [
+                'id' => '278fd5c8-7d41-45be-9d97-4dcf34236eec',
+                'label' => 'Techno basics',
+                'slug' => 'techno-basics',
+            ],
+
+            'techno-extreme' => [
+                'id' => '278fd5c8-7d41-45be-9d97-4dcf34236eed',
+                'label' => 'Techno extreme',
+                'slug' => 'techno-extreme',
+            ],
+
+            'alternative' => [
+                'id' => '278fd5c8-7d41-45be-9d97-4dcf34236eee',
+                'label' => 'Alternative',
+                'slug' => 'alternative',
+            ]
+        ];
+    }
+
+    private function getArticle(array $data, array $categories)
+    {
+        return
+            (new Article())
+                ->setId(Uuid::fromString($data['id']))
+                ->setTitle($data['title'])
+                ->setBody($data['body'])
+                ->setCategory($categories[$data['category']]);
+    }
+
+    private function getArticles()
+    {
+        return [
+            [
+                'id' => '278fd5c8-7d41-45be-9d97-4dcf34236aeb',
+                'title' => 'Feel the groove',
+                'body' => '<b>Hello!</b>',
+                'category' => 'feel-the-groove',
+            ],
+
+            [
+                'id' => '278fd5c8-7d41-45be-9d97-4dcf34236bec',
+                'title' => 'Techno basics',
+                'body' => 'This is an awesome article.',
+                'category' => 'feel-the-groove',
+            ],
+        ];
     }
 
     private function getCompanies()
