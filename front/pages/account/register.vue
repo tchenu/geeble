@@ -38,61 +38,12 @@ export default {
       },
     },
   },
-  computed: {
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-    notificationAutoCloseDuration() {
-      return this.$store && this.$store.state.notification ? 5 : 0;
-    },
-  },
   methods: {
-    // Try to register the user in with the email, username
-    // and password they provided.
     tryToRegisterIn() {
       this.submitted = true;
-      // stop here if form is invalid
       this.$v.$touch();
 
-      if (this.$v.$invalid) {
-        return;
-      } else {
-        if (process.env.auth === "firebase") {
-          this.tryingToRegister = true;
-          // Reset the regError if it existed.
-          this.regError = null;
-          return (
-            this.$store
-              .dispatch("auth/register", {
-                email: this.user.email,
-                password: this.user.password,
-              })
-              // eslint-disable-next-line no-unused-vars
-              .then((token) => {
-                this.tryingToRegister = false;
-                this.isRegisterError = false;
-                this.registerSuccess = true;
-                if (this.registerSuccess) {
-                  this.$router.push(
-                    this.$route.query.redirectFrom || {
-                      path: "/",
-                    }
-                  );
-                }
-              })
-              .catch((error) => {
-                this.tryingToRegister = false;
-                this.regError = error ? error : "";
-                this.isRegisterError = true;
-              })
-          );
-        } else if (process.env.auth === "fakebackend") {
-          const { email, username, password } = this.user;
-          if (email && username && password) {
-            this.$store.dispatch("authfack/registeruser", this.user);
-          }
-        }
-      }
+      // Mettre en place le register
     },
   },
 };
@@ -130,13 +81,6 @@ export default {
                   <p class="text-muted">Get your free Geebl account now.</p>
                 </div>
                 <div class="p-2 mt-4">
-                  <div
-                    v-if="notification.message"
-                    :class="'alert ' + notification.type"
-                  >
-                    {{ notification.message }}
-                  </div>
-
                   <b-form @submit.prevent="tryToRegisterIn">
                     <b-form-group
                       id="email-group"
@@ -233,38 +177,6 @@ export default {
                     </div>
 
                     <div class="mt-4 text-center">
-                      <div class="signin-other-title">
-                        <h5 class="font-size-14 mb-3 title">Sign up using</h5>
-                      </div>
-
-                      <ul class="list-inline">
-                        <li class="list-inline-item">
-                          <a
-                            href="javascript:void()"
-                            class="social-list-item bg-primary text-white border-primary"
-                          >
-                            <i class="mdi mdi-facebook"></i>
-                          </a>
-                        </li>
-                        <li class="list-inline-item">
-                          <a
-                            href="javascript:void()"
-                            class="social-list-item bg-info text-white border-info"
-                          >
-                            <i class="mdi mdi-twitter"></i>
-                          </a>
-                        </li>
-                        <li class="list-inline-item">
-                          <a
-                            href="javascript:void()"
-                            class="social-list-item bg-danger text-white border-danger"
-                          >
-                            <i class="mdi mdi-google"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="mt-4 text-center">
                       <p class="text-muted mb-0">
                         Already have an account ?
                         <nuxt-link
@@ -276,16 +188,12 @@ export default {
                     </div>
                   </b-form>
                 </div>
-                <!-- end card-body -->
               </div>
-              <!-- end card -->
             </div>
           </div>
-          <!-- end col -->
         </div>
       </div>
     </div>
-    <!-- end row -->
   </div>
 </template>
 

@@ -55,6 +55,13 @@ export default {
             return (price).toFixed(2);
         }
     },
+    methods: {
+        async createSlot() {
+            const { slotId, clientSecret } = await slotService.add(this.event.slug, this.quantity);
+
+            this.$router.push({name: 'checkout-slot', params: { slot: slotId }, query: { payment_intent_client_secret: clientSecret }})
+        }
+    }
 };
 </script>
 
@@ -107,13 +114,7 @@ export default {
                         <h5>Total</h5>
                     </div>
                     <div>
-                        <nuxt-link 
-                            :to="event.slug + '/checkout/' + quantity"
-                            :event="!quantity ? '' : 'click'"
-                            class="btn btn-success mt-5 w-100"
-                            :class="!quantity ? 'disabled' : ''">
-                            Checkout
-                        </nuxt-link>
+                        <button @click.prevent="createSlot" :disabled="!quantity" class="btn btn-success mt-5 w-100">Checkout</button>
                     </div>
                 </div>
             </div>

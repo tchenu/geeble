@@ -1,5 +1,8 @@
 <script>
 import { userService } from "../../helpers/authservice/user.service"
+import { eventService } from '../../helpers/event.service';
+import { slotService } from '../../helpers/slot.service';
+import { statService } from '../../helpers/stat.service';
 
 export default {
     head() {
@@ -20,11 +23,34 @@ export default {
             ],
         };
     },
-    computed: {
-        user () {
-            return userService.readJwt(this.$store.state.authfack.user);
+    async asyncData() {
+        let events = null
+        let total = null
+        let series = null
+
+        if (await userService.hasCompany()) {
+            events = await eventService.getByMyCompany()
         }
-  },
+
+        if (await userService.hasRole('ROLE_ADMIN')) {
+            const earn = await statService.adminEarn();
+
+            total = earn.total
+            series = [{ data: earn.detail.map(day => day['price'])}]
+        }
+
+        return {
+            slots: await slotService.getMine(),
+            events,
+            total,
+            series,
+        }
+    },
+    methods: {
+        async updateSlots() {
+            this.slots =  await slotService.getMine()
+        }
+    },
     middleware: "authentication",
 };
 </script>
@@ -33,43 +59,14 @@ export default {
 <div>
     <PageHeader :title="title" :items="items" />
 
-    <Stat v-if="user.roles.includes('ROLE_ADMIN')"/>
+    <Stat v-if="series != null && total != null" :total="total" :series="series"/>
+
+    <Events v-if="events" :events="events"/>
 
     <div class="row">
-        <SalesAnalytics />
-        <div class="col-xl-4">
-            <div class="card bg-primary">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-sm-8">
-                            <p class="text-white font-size-18">
-                                Enhance your
-                                <b>Campaign</b> for better outreach
-                                <i class="mdi mdi-arrow-right"></i>
-                            </p>
-                            <div class="mt-4">
-                                <a href="javascript: void(0);" class="btn btn-success waves-effect waves-light">Upgrade Account!</a>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="mt-4 mt-sm-0">
-                                <img src="~/assets/images/setup-analytics-amico.svg" class="img-fluid" alt />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end card-body-->
-            </div>
-            <!-- end card-->
-            <SellingProduct />
-        </div>
+        <Slots :slots="slots" @update-slots="updateSlots"/>
     </div>
 
-    <div class="row">
-        <TopUsers />
-        <Activity />
-        <SocialSource />
-    </div>
 </div>
 </template>
 

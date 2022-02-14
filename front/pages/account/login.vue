@@ -30,14 +30,6 @@ export default {
       required
     }
   },
-  computed: {
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-    notificationAutoCloseDuration() {
-      return this.$store && this.$store.state.notification ? 5 : 0;
-    }
-  },
   methods: {
     // Try to log the user in with the username
     // and password they provided.
@@ -53,7 +45,7 @@ export default {
       const { email, password } = this;
       
       if (email && password) {
-        this.$store.dispatch("authfack/login", {
+        this.$store.dispatch("auth/login", {
           email,
           password
         });
@@ -102,13 +94,6 @@ export default {
                     dismissible
                     >{{ authError }}</b-alert
                   >
-
-                  <div
-                    v-if="notification.message"
-                    :class="'alert ' + notification.type"
-                  >
-                    {{ notification.message }}
-                  </div>
 
                   <b-form @submit.prevent="tryToLogIn">
                     <b-form-group
@@ -177,38 +162,6 @@ export default {
                         >Log In</b-button
                       >
                     </div>
-                    <div class="mt-4 text-center">
-                      <div class="signin-other-title">
-                        <h5 class="font-size-14 mb-3 title">Sign in with</h5>
-                      </div>
-
-                      <ul class="list-inline">
-                        <li class="list-inline-item">
-                          <a
-                            href="javascript:void()"
-                            class="social-list-item bg-primary text-white border-primary"
-                          >
-                            <i class="mdi mdi-facebook"></i>
-                          </a>
-                        </li>
-                        <li class="list-inline-item">
-                          <a
-                            href="javascript:void()"
-                            class="social-list-item bg-info text-white border-info"
-                          >
-                            <i class="mdi mdi-twitter"></i>
-                          </a>
-                        </li>
-                        <li class="list-inline-item">
-                          <a
-                            href="javascript:void()"
-                            class="social-list-item bg-danger text-white border-danger"
-                          >
-                            <i class="mdi mdi-google"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
 
                     <div class="mt-4 text-center">
                       <p class="mb-0">
@@ -222,15 +175,10 @@ export default {
                     </div>
                   </b-form>
                 </div>
-                <!-- end card-body -->
               </div>
-              <!-- end card -->
             </div>
-            <!-- end row -->
           </div>
-          <!-- end col -->
         </div>
-        <!-- end row -->
       </div>
     </div>
   </div>

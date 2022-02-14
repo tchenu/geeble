@@ -12,7 +12,6 @@ export const actions = {
       },
       (error) => {
         commit("loginFailure", error);
-        dispatch("modules/notification/error", error, { root: true });
       }
     );
   },

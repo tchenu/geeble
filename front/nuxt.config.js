@@ -37,16 +37,9 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
-    "~/plugins/i18n.js",
-    "~/plugins/simplebar.js",
-    "~/plugins/vue-click-outside.js",
     "~/plugins/vue-apexcharts.js",
     "~/plugins/vuelidate.js",
-    "~/plugins/vue-slidebar.js",
-    "~/plugins/vue-lightbox.js",
-    "~/plugins/vue-chartist.js",
-    "~/plugins/vue-mask.js",
-    "~/plugins/vue-googlemap.js",
+    "~/plugins/vue-countdown.js",
   ],
   /*
    ** Auto import components

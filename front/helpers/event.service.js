@@ -5,6 +5,7 @@ export const eventService = {
   getAll,
   get,
   available,
+  getByMyCompany,
 };
 
 function getAll() {
@@ -23,6 +24,17 @@ function get(slug) {
   };
 
   return fetch(`${process.env.eventdomain}/event/${slug}`, requestOptions).then(
+    handleResponse
+  );
+}
+
+function getByMyCompany() {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader(),
+  };
+
+  return fetch(`${process.env.eventdomain}/event/company`, requestOptions).then(
     handleResponse
   );
 }

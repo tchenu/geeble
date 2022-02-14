@@ -42,7 +42,7 @@ enum SlotStatus {
   PENDING
   CANCELED
   COMPLETED
-  REFOUND
+  REFUND
 }
 
 enum EventStatus {

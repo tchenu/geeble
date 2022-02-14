@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Inject, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import {
   Transaction,
@@ -12,6 +12,8 @@ import { MqttService } from 'nest-mqtt';
 
 @Injectable()
 export class TransactionService {
+  private readonly logger = new Logger(TransactionService.name);
+
   constructor(
     private prisma: PrismaService,
     @Inject(MqttService) private readonly mqttService: MqttService,
@@ -25,14 +27,14 @@ export class TransactionService {
 
     const transaction = await this.prisma.transaction.create({
       data: {
-        ticketId: createTransationDto.slotId,
+        slotId: createTransationDto.slotId,
         intentionId: intention.id,
         amount: createTransationDto.amount,
       },
     });
 
     return {
-      slotId: transaction.id,
+      slotId: transaction.slotId,
       clientSecret: intention.client_secret,
     };
   }
@@ -54,7 +56,7 @@ export class TransactionService {
     });
   }
 
-  async refund(slotWhereUniqueInput: Prisma.TransactionWhereUniqueInput): Promise<Transaction> {
+  async refund(slotWhereUniqueInput: Prisma.TransactionWhereUniqueInput) {
     const transaction = await this.prisma.transaction.findUnique({
       where: slotWhereUniqueInput,
     });
@@ -62,20 +64,23 @@ export class TransactionService {
     if (transaction.status !== TransactionStatus.succeeded) {
       throw new HttpException('Transaction is not captured', HttpStatus.FORBIDDEN);
     }
+    try {
+      const refund = await Stripe.refunds.create({
+        payment_intent: transaction.intentionId,
+      });
 
-    const refund = await Stripe.refunds.create({
-      payment_intent: transaction.intentionId,
-    });
+      await this.prisma.transaction.update({
+        where: slotWhereUniqueInput,
+        data: {
+          refundId: refund.id,
+          status: TransactionStatus.refunded,
+        },
+      });
 
-    const updatedTransaction = await this.prisma.transaction.update({
-      where: slotWhereUniqueInput,
-      data: {
-        refundId: refund.id,
-        status: TransactionStatus.refunded,
-      },
-    });
-
-    return updatedTransaction;
+      this.logger.log(`Refund of ${transaction.id} of slot ${transaction.slotId}`)
+    } catch (exception) {
+      throw new HttpException(exception.code, exception.statusCode)
+    }
   }
 
   async confirmPayment(intentionWhereUniqueInput: Prisma.TransactionWhereUniqueInput) {
@@ -91,7 +96,7 @@ export class TransactionService {
     });
 
     this.mqttService.publish('confirm-payment', {
-      slotId: transaction.ticketId,
+      slotId: transaction.slotId,
       transactionId: transaction.id,
       status: paymentIntents.status
     });

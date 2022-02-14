@@ -9,6 +9,7 @@ import { MqttService, Payload, Subscribe } from 'nest-mqtt';
 import { ProcessSlotDto } from './dto/process-slot.dto';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 
 @Injectable()
@@ -40,7 +41,7 @@ export class SlotService {
         }, { headers: { "x-api-key": process.env.API_KEY }})
       );
 
-      return response.data.clientSecret;
+      return response.data;
     } catch(exception) {
       throw new HttpException("Unauthorizde", HttpStatus.UNAUTHORIZED)
     }
@@ -153,9 +154,56 @@ export class SlotService {
       requires_confirmation: SlotStatus.PENDING,
       requires_payment_method: SlotStatus.PENDING,
       succeeded: SlotStatus.COMPLETED,
-      refunded: SlotStatus.REFOUND,
+      refunded: SlotStatus.REFUND,
     };
 
     return convert[status]
+  }
+
+  async refund(slotId: string) {
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post(`${process.env.PAYMENT_DOMAIN}/transactions/refund`, {
+          slotId: slotId
+        }, { headers: { "x-api-key": process.env.API_KEY }})
+      );
+
+      this.logger.log(`Refund slot of ${slotId}`)
+
+      await this.update({
+        where: { id: slotId },
+        data: {
+          status: SlotStatus.REFUND
+        }
+      });
+
+      this.mqttService.publish('refund-payment', {
+        slotId: slotId
+      })
+
+    } catch(exception) {
+      if (exception.response.data.message === "charge_already_refunded") {
+        throw new HttpException(exception.response.data.message, exception.response.data.statusCode)
+      }
+    }
+  }
+
+
+  @Cron(CronExpression.EVERY_30_SECONDS)
+  async handleCron() {
+    this.logger.log('Cron, clear expired slots')
+
+    const expire = new Date()
+    expire.setMinutes(expire.getMinutes() - 10)
+
+    await this.prisma.slot.updateMany({
+      where: {
+        status: SlotStatus.PENDING,
+        createdAt:  { lte: expire }
+      },
+      data: {
+        status: SlotStatus.CANCELED
+      }
+    })
   }
 }

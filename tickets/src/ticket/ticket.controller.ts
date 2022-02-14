@@ -13,13 +13,21 @@ export class TicketController {
   @UseGuards(JwtAuthGuard)
   @Get('/:uuid')
   async get(@Request() req, @Response() res, @Param('uuid') uuid: string) {
-    const ticket = await this.ticketService.findOne(uuid)
+    const qrCodes = []
 
-    gateExists(ticket)
-    gateOwnTicket(ticket, req.user)
+    const tickets = await this.ticketService.findAll({
+      where: {
+        userId: req.user.id,
+        slotId: uuid
+      }
+    })
+
+    for (const ticket of tickets) {
+      qrCodes.push(await this.ticketService.generateQRCode(ticket.id));
+    }
 
     return res.json({
-      'image': await this.ticketService.generateQRCode(ticket.id),
+      'images': qrCodes
     });
   }
 

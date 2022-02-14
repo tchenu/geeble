@@ -81,7 +81,7 @@ export class EventService {
 
   async update(params: {
     where: Prisma.EventWhereUniqueInput;
-    data: Prisma.EventWhereInput;
+    data: Prisma.EventUpdateInput;
     companyId: string;
   }): Promise<Event> {
     const { where, data, companyId } = params;

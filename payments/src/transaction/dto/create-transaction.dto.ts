@@ -1,12 +1,12 @@
 import { Type } from 'class-transformer';
-import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
+import { IsNumber, IsNotEmpty, IsUUID } from 'class-validator';
 
 
 export class CreateTransationDto {
     @IsNotEmpty()
-    @IsString()
+    @IsUUID()
     slotId: string;
-    
+
     @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()

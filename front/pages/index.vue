@@ -9,64 +9,69 @@ export default {
     },
     data() {
         return {
-            title: "Dashboard",
-            items: [{
+            title: "Events",
+            items: [
+                {
                     text: "Geebl",
+                    href: "/"
                 },
                 {
-                    text: "Dashboard",
+                    text: "Events",
                     active: true,
-                },
+                }
             ],
+            events: []
         };
     },
-    middleware: "authentication",
-    async mounted() {
-        console.log(await eventService.getAll());
+    async fetch() {
+        this.events = await eventService.getAll();
     },
+    filters: {
+        toDate: function (date) {
+            date = new Date(date)
+
+            return `${date.getDate().toString().padStart(2, "0")}/${date.getMonth().toString().padStart(2, "0")}/${date.getFullYear()}`
+        }
+    }
 };
 </script>
 
 <template>
 <div>
     <PageHeader :title="title" :items="items" />
-
-    <Stat />
-
-    <div class="row">
-        <SalesAnalytics />
-        <div class="col-xl-4">
-            <div class="card bg-primary">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-sm-8">
-                            <p class="text-white font-size-18">
-                                Enhance your
-                                <b>Campaign</b> for better outreach
-                                <i class="mdi mdi-arrow-right"></i>
-                            </p>
-                            <div class="mt-4">
-                                <a href="javascript: void(0);" class="btn btn-success waves-effect waves-light">Upgrade Account!</a>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="mt-4 mt-sm-0">
-                                <img src="~/assets/images/setup-analytics-amico.svg" class="img-fluid" alt />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end card-body-->
+    <div v-for="event in events" :key="event.id" class="card">
+        <div class="card-body">
+            <div class="float-end text-end">
+                <p class="mb-0">{{ event.date | toDate }}</p>
+                <p class="text-muted mb-0 text-end">
+                    <i class="mdi mdi-map-marker"></i>
+                    {{ event.location }}
+                </p>
             </div>
-            <!-- end card-->
-            <SellingProduct />
-        </div>
-    </div>
 
-    <div class="row">
-        <TopUsers />
-        <Activity />
-        <SocialSource />
+            <h4 class="card-title">{{ event.name.toUpperCase() }}</h4>
+            <p class="text-muted mb-0">{{ event.organizer }}</p>
+
+            <div class="mt-3">
+                <p class="card-text">{{ event.description }}</p>
+            </div>
+
+            <div class="mt-3">
+                <div class="float-end">
+                    <nuxt-link :to="'/event/' + event.slug" class="btn btn-primary">Read more</nuxt-link>
+                </div>
+
+                <h3 class="text-primary">
+                    $
+                    <span data-plugin="counterup">
+                        <span>{{ event.price }}</span>
+                    </span>
+                    <span class="text-muted d-inline-block font-size-15 ml-3">/ ticket</span>
+                </h3>
+            </div>
+
+            
+        </div>
     </div>
 </div>
 </template>

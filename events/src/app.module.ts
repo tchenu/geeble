@@ -8,10 +8,12 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MqttModule } from 'nest-mqtt';
 import { StatModule } from './stat/stat.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     MqttModule.forRoot({
       host: process.env.MQTT_HOST,
       port: Number(process.env.MQTT_PORT),

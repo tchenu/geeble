@@ -10,7 +10,7 @@ generator client {
 
 model Transaction {
   id          String              @id @default(uuid())
-  ticketId    String
+  slotId      String              @unique
   intentionId String              @unique
   refundId    String?
   amount      Int

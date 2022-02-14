@@ -31,7 +31,7 @@ export function gateExists(element: Slot|Event) {
 export function gateTooLate(slot: Slot & { event: Event;}) {
   const date = new Date(slot.event.date)
 
-  date.setDate(date.getDate() - 7);
+  date.setDate(date.getDate() - 2);
 
   if (new Date() > date) {
     throw new HttpException('Not Acceptable', HttpStatus.NOT_ACCEPTABLE);

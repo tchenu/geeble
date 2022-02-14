@@ -52,9 +52,11 @@ export class SlotController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Request() req, @Param('id') id: string) {
-    gateAdmin(req.user)
+    const slot = await this.slotService.findOneWithEvent({ id: id });
 
-    return this.slotService.findOne({ id: id });
+    gateOwnSlot(slot, req.user)
+
+    return slot
   }
 
   @UseGuards(JwtAuthGuard)
@@ -67,6 +69,6 @@ export class SlotController {
     gateOwnSlot(slot, req.user)
     gateTooLate(slot)
 
-    return this.slotService.update({ where: { id: id }, data: { status: SlotStatus.REFOUND}});
+    return this.slotService.refund(slot.id);
   }
 }

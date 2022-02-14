@@ -5,12 +5,16 @@ export const userService = {
   login,
   logout,
   register,
-  getAll,
+  getMe,
   readJwt,
+  hasRole,
+  hasCompany,
 };
 
-function readJwt(jwt) {
-  jwt = jwt_decode(jwt.token);
+function readJwt() {
+  const token = localStorage.getItem("user");
+
+  const jwt = jwt_decode(token);
 
   return {
     id: jwt.id,
@@ -53,12 +57,29 @@ function register(user) {
   );
 }
 
-function getAll() {
+function getMe() {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
   };
-  return fetch(`/users`, requestOptions).then(handleResponse);
+
+  const { id } = this.readJwt();
+
+  return fetch(`${process.env.authdomain}/users/${id}`, requestOptions).then(
+    handleResponse
+  );
+}
+
+async function hasRole(role) {
+  const { roles } = await this.getMe();
+
+  return roles.includes(role);
+}
+
+async function hasCompany() {
+  const { company } = await this.getMe();
+
+  return company != null;
 }
 
 function handleResponse(response) {

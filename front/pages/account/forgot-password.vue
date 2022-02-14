@@ -26,38 +26,11 @@ export default {
     },
   },
   methods: {
-    // Try to register the user in with the email, fullname
-    // and password they provided.
     tryToReset() {
       this.submitted = true;
-      // stop here if form is invalid
       this.$v.$touch();
 
-      if (this.$v.$invalid) {
-        return;
-      } else {
-        if (process.env.auth === "firebase") {
-          this.tryingToReset = true;
-          // Reset the authError if it existed.
-          this.error = null;
-          return (
-            this.$store
-              .dispatch("auth/resetPassword", {
-                email: this.email,
-              })
-              // eslint-disable-next-line no-unused-vars
-              .then((token) => {
-                this.tryingToReset = false;
-                this.isResetError = false;
-              })
-              .catch((error) => {
-                this.tryingToReset = false;
-                this.error = error ? error : "";
-                this.isResetError = true;
-              })
-          );
-        }
-      }
+      // TODO
     },
   },
 };
@@ -141,16 +114,12 @@ export default {
                     </form>
                   </div>
                 </div>
-                <!-- end card-body -->
               </div>
-              <!-- end card -->
             </div>
-            <!-- end col -->
           </div>
         </div>
       </div>
     </div>
-    <!-- end row -->
   </div>
 </template>
 

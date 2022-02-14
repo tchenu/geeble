@@ -79,4 +79,18 @@ export class TicketService {
       throw err;
     }
   }
+
+  @Subscribe('refund-payment')
+  async refound(@Payload() payload) {
+    const { slotId } = payload
+
+    this.logger.log(`Disable tickets of ${slotId} after refund`)
+
+    await this.prisma.ticket.updateMany({
+      where: { slotId: slotId },
+      data: {
+        used: true
+      }
+    });
+  }
 }
